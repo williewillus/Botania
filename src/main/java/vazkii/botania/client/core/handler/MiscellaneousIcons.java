@@ -128,11 +128,6 @@ public class MiscellaneousIcons {
     private void  stitchBaubleTextures(TextureStitchEvent evt) {
         ItemTerrasteelHelm.willIcon = IconHelper.forName(evt.map, "willFlame", "items");
 
-        ItemBaubleCosmetic.sprites = new TextureAtlasSprite[ItemBaubleCosmetic.SUBTYPES];
-        for (int i = 0; i < ItemBaubleCosmetic.SUBTYPES; i++) {
-            ItemBaubleCosmetic.sprites[i] = IconHelper.forName(evt.map, "cosmetic" + i, "items");
-        }
-
         tiaraWingIcons = new TextureAtlasSprite[ItemFlightTiara.WING_TYPES];
         for (int i = 0; i < tiaraWingIcons.length; i++) {
             tiaraWingIcons[i] = IconHelper.forName(evt.map, "flightTiara" + i, "items");

@@ -22,8 +22,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 
@@ -40,8 +38,6 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 
 	public static final int SUBTYPES = 32;
-	@SideOnly(Side.CLIENT)
-	public static TextureAtlasSprite[] sprites;
 
 	public ItemBaubleCosmetic() {
 		super(LibItemNames.COSMETIC);
@@ -85,47 +81,47 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.45F, 0F);
-				renderIcon(2);
+				renderIcon(stack);
 				break;
 			case 4:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.45F, 0F);
-				renderIcon(4);
+				renderIcon(stack);
 				break;
 			case 5:
 				faceTranslate();
 				scale(0.35F);
 				GlStateManager.translate(0.3F, -4.65F, 0F);
-				renderIcon(5);
+				renderIcon(stack);
 				break;
 			case 6:
 				faceTranslate();
 				scale(0.35F);
 				GlStateManager.translate(0.9F, -4.65F, 0F);
-				renderIcon(6);
+				renderIcon(stack);
 				break;
 			case 7:
 				faceTranslate();
 				scale(0.6F);
 				GlStateManager.translate(0.2F, -2.15F, 0.6F);
-				renderIcon(7);
+				renderIcon(stack);
 				break;
 			case 8:
 				faceTranslate();
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				scale(0.6F);
 				GlStateManager.translate(-0.9F, -2.45F, 0.2F);
-				renderIcon(8);
+				renderIcon(stack);
 				break;
 			case 9:
 				faceTranslate();
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				scale(0.6F);
 				GlStateManager.translate(-0.9F, -2.5F, 0.2F);
-				renderIcon(9);
+				renderIcon(stack);
 				GlStateManager.translate(0F, 0F, 1F);
-				renderIcon(9);
+				renderIcon(stack);
 				break;
 			case 10:
 				faceTranslate();
@@ -133,72 +129,72 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				scale(0.4F);
 				GlStateManager.translate(-0.5F, -3.25F, 0.3F);
 				GlStateManager.rotate(120F, 0F, 1F, 0F);
-				renderIcon(10);
+				renderIcon(stack);
 				GlStateManager.rotate(-100F, 0F, 1F, 0F);
-				renderIcon(10);
+				renderIcon(stack);
 				break;
 			case 11:
 				faceTranslate();
 				scale(0.6F);
 				GlStateManager.translate(0.2F, -2.45F, 0.6F);
-				renderIcon(11);
+				renderIcon(stack);
 				break;
 			case 15:
 				faceTranslate();
 				GlStateManager.translate(-0.1F, -2F, 0F);
-				renderIcon(15);
+				renderIcon(stack);
 				break;
 			case 17:
 				faceTranslate();
 				scale(0.35F);
 				GlStateManager.translate(0.3F, -4.65F, 0F);
-				renderIcon(17);
+				renderIcon(stack);
 				break;
 			case 18:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				GlStateManager.translate(-0.3F, -2.1F, 0.55F);
-				renderIcon(18);
+				renderIcon(stack);
 				break;
 			case 19:
 				faceTranslate();
 				scale(0.6F);
 				GlStateManager.translate(0.2F, -2.7F, 0.1F);
-				renderIcon(19);
+				renderIcon(stack);
 				break;
 			case 20:
 				faceTranslate();
 				scale(0.25F);
 				GlStateManager.translate(0.4F, -5.45F, -0.1F);
-				renderIcon(20);
+				renderIcon(stack);
 				GlStateManager.translate(1.4F, 0F, 0F);
-				renderIcon(20);
+				renderIcon(stack);
 				break;
 			case 22:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.35F, 0F);
-				renderIcon(22);
+				renderIcon(stack);
 				break;
 			case 23:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.35F, 0F);
-				renderIcon(23);
+				renderIcon(stack);
 				break;
 			case 24:
 				faceTranslate();
 				scale(0.6F);
 				GlStateManager.translate(0.5F, -2.5F, 0.1F);
 				GlStateManager.rotate(60F, 0F, 0F, 1F);
-				renderIcon(24);
+				renderIcon(stack);
 				break;
 			case 25:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.45F, 0F);
-				renderIcon(25);
+				renderIcon(stack);
 				break;
 			case 26:
 				faceTranslate();
@@ -206,34 +202,34 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
-				renderIcon(26);
+				renderIcon(stack);
 				break;
 			case 27:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.6F, 0F);
-				renderIcon(27);
+				renderIcon(stack);
 				break;
 			case 28:
 				faceTranslate();
 				scale(0.25F);
 				GlStateManager.translate(1.55F, -6.2F, -0.1F);
-				renderIcon(28);
+				renderIcon(stack);
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.translate(-0.1F, 0F, 0.1F);
-				renderIcon(28);
+				renderIcon(stack);
 				break;
 			case 30:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.04F, -2.35F, 0F);
-				renderIcon(30);
+				renderIcon(stack);
 				break;
 			case 31:
 				faceTranslate();
 				scale(0.5F);
 				GlStateManager.translate(0.3F, -2.35F, 0.5F);
-				renderIcon(31);
+				renderIcon(stack);
 				break;
 			}
 		} else {
@@ -243,62 +239,62 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				chestTranslate();
 				scale(0.5F);
 				GlStateManager.translate(0.5F, 0.7F, 0F);
-				renderIcon(0);
+				renderIcon(stack);
 				break;
 			case 1:
 				chestTranslate();
 				scale(0.75F);
 				GlStateManager.translate(0.15F, -0.1F, 0F);
-				renderIcon(1);
+				renderIcon(stack);
 				break;
 			case 3:
 				chestTranslate();
 				scale(0.6F);
 				GlStateManager.translate(0.35F, 0.3F, 0F);
-				renderIcon(3);
+				renderIcon(stack);
 				break;
 			case 12:
 				chestTranslate();
 				scale(0.225F);
 				GlStateManager.translate(1.2F, 1.9F, 0F);
-				renderIcon(12);
+				renderIcon(stack);
 				break;
 			case 13:
 				chestTranslate();
 				GlStateManager.rotate(-90F, 0F, 1F, 0F);
 				scale(0.5F);
 				GlStateManager.translate(-1.3F, -0.4F, -1F);
-				renderIcon(13);
+				renderIcon(stack);
 				break;
 			case 14:
 				chestTranslate();
 				scale(0.5F);
 				GlStateManager.translate(2.3F, 1F, -0.05F);
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
-				renderIcon(14);
+				renderIcon(stack);
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.color(0F, 0F, 0.3F, 1F);
 				GlStateManager.translate(-2.6F, 0F, 0.05F);
-				renderIcon(14);
+				renderIcon(stack);
 				break;
 			case 16:
 				chestTranslate();
 				scale(0.225F);
 				GlStateManager.translate(2.3F, 1.9F, 0F);
-				renderIcon(16);
+				renderIcon(stack);
 				break;
 			case 21:
 				chestTranslate();
 				scale(0.3F);
 				GlStateManager.translate(1.2F, 0.5F, 0F);
-				renderIcon(21);
+				renderIcon(stack);
 				break;
 			case 29:
 				chestTranslate();
 				scale(0.8F);
 				GlStateManager.translate(0.2F, -0.2F, -0.35F);
 				GlStateManager.rotate(10F, 0F, 0F, 1F);
-				renderIcon(29);
+				renderIcon(stack);
 				break;
 			}
 		}
@@ -319,8 +315,9 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 		GlStateManager.scale(f, f, f);
 	}
 
-	public void renderIcon(int i) {
-		TextureAtlasSprite sprite = sprites[i];
+	public void renderIcon(ItemStack stack) {
+		// Too lazy to redo all the translations =P
+		TextureAtlasSprite sprite = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(stack).getParticleTexture();
 		float f = sprite.getMinU();
 		float f1 = sprite.getMaxU();
 		float f2 = sprite.getMinV();

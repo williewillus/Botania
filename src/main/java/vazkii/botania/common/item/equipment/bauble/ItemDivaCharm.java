@@ -15,10 +15,8 @@ import java.util.List;
 import com.google.common.base.Predicates;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.monster.EntityCreeper;
@@ -33,7 +31,6 @@ import net.minecraftforge.event.entity.living.LivingHurtEvent;
 import vazkii.botania.api.item.IBaubleRender;
 import vazkii.botania.api.mana.IManaUsingItem;
 import vazkii.botania.api.mana.ManaItemHandler;
-import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.subtile.functional.SubTileHeiseiDream;
 import vazkii.botania.common.lib.LibItemNames;
@@ -46,9 +43,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBaubleRender {
-
-	@SideOnly(Side.CLIENT)
-	TextureAtlasSprite itemIcon;
 
 	public ItemDivaCharm() {
 		super(LibItemNames.DIVA_CHARM);
@@ -104,24 +98,15 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 	@SideOnly(Side.CLIENT)
 	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.HEAD) {
-			if (itemIcon == null) {
-				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(new ItemStack(this));
-				itemIcon = model.getParticleTexture();
-			}
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			Helper.rotateIfSneaking(player);
 			boolean armor = player.getCurrentArmor(2) != null;
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(armor ? 0.35F : 0.3F, 0.225F, -0.4F);
+			GlStateManager.translate(armor ? 0.35F : 0.3F, 0.45F, -0.15F);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
-			GlStateManager.rotate(90F, 0F, 0F, 1F);
 
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			float f = itemIcon.getMinU();
-			float f1 = itemIcon.getMaxU();
-			float f2 = itemIcon.getMinV();
-			float f3 = itemIcon.getMaxV();
-			IconHelper.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 16F);
+			Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		}
 	}
 
