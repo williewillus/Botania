@@ -34,98 +34,98 @@ import baubles.common.lib.PlayerHandler;
 
 public final class BaubleRenderHandler implements LayerRenderer<EntityPlayer> {
 
-    @Override
-    public void doRenderLayer(EntityPlayer player, float f0, float f1, float partialTicks, float f3, float f4, float f5, float scale) {
-        if (!ConfigHandler.renderBaubles || player.getActivePotionEffect(Potion.invisibility) != null)
-            return;
-        InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
-        dispatchRenders(inv, player, partialTicks, RenderType.BODY);
-        if (inv.getStackInSlot(3) != null)
-            renderManaTablet(player);
+	@Override
+	public void doRenderLayer(EntityPlayer player, float f0, float f1, float partialTicks, float f3, float f4, float f5, float scale) {
+		if (!ConfigHandler.renderBaubles || player.getActivePotionEffect(Potion.invisibility) != null)
+			return;
+		InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
+		dispatchRenders(inv, player, partialTicks, RenderType.BODY);
+		if (inv.getStackInSlot(3) != null)
+			renderManaTablet(player);
 
-        float yaw = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * partialTicks;
-        float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks;
-        float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
+		float yaw = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * partialTicks;
+		float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks;
+		float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
 
-        GlStateManager.pushMatrix();
-        GlStateManager.rotate(yawOffset, 0, -1, 0);
-        GlStateManager.rotate(yaw - 270, 0, 1, 0);
-        GlStateManager.rotate(pitch, 0, 0, 1);
-        dispatchRenders(inv, player, partialTicks, RenderType.HEAD);
-        ItemStack helm = player.inventory.armorItemInSlot(3);
-        if (helm != null && helm.getItem() instanceof ItemTerrasteelHelm)
-            ItemTerrasteelHelm.renderOnPlayer(helm, player);
+		GlStateManager.pushMatrix();
+		GlStateManager.rotate(yawOffset, 0, -1, 0);
+		GlStateManager.rotate(yaw - 270, 0, 1, 0);
+		GlStateManager.rotate(pitch, 0, 0, 1);
+		dispatchRenders(inv, player, partialTicks, RenderType.HEAD);
+		ItemStack helm = player.inventory.armorItemInSlot(3);
+		if (helm != null && helm.getItem() instanceof ItemTerrasteelHelm)
+			ItemTerrasteelHelm.renderOnPlayer(helm, player);
 
-        GlStateManager.popMatrix();
-    }
+		GlStateManager.popMatrix();
+	}
 
-    private void dispatchRenders(InventoryBaubles inv, EntityPlayer player, float partialTicks, RenderType type) {
-        for (int i = 0; i < inv.getSizeInventory(); i++) {
-            ItemStack stack = inv.getStackInSlot(i);
-            if (stack != null) {
-                Item item = stack.getItem();
+	private void dispatchRenders(InventoryBaubles inv, EntityPlayer player, float partialTicks, RenderType type) {
+		for (int i = 0; i < inv.getSizeInventory(); i++) {
+			ItemStack stack = inv.getStackInSlot(i);
+			if (stack != null) {
+				Item item = stack.getItem();
 
-                if(item instanceof IPhantomInkable) {
-                    IPhantomInkable inkable = (IPhantomInkable) item;
-                    if(inkable.hasPhantomInk(stack))
-                        continue;
-                }
+				if(item instanceof IPhantomInkable) {
+					IPhantomInkable inkable = (IPhantomInkable) item;
+					if(inkable.hasPhantomInk(stack))
+						continue;
+				}
 
-                if (item instanceof ICosmeticAttachable) {
-                    ICosmeticAttachable attachable = (ICosmeticAttachable) item;
-                    ItemStack cosmetic = attachable.getCosmeticItem(stack);
-                    if (cosmetic != null) {
-                        GlStateManager.pushMatrix();
-                        GlStateManager.color(1F, 1F, 1F, 1F);
-                        ((IBaubleRender) cosmetic.getItem()).onPlayerBaubleRender(cosmetic, player, partialTicks, type);
-                        GlStateManager.popMatrix();
-                        continue;
-                    }
-                }
+				if (item instanceof ICosmeticAttachable) {
+					ICosmeticAttachable attachable = (ICosmeticAttachable) item;
+					ItemStack cosmetic = attachable.getCosmeticItem(stack);
+					if (cosmetic != null) {
+						GlStateManager.pushMatrix();
+						GlStateManager.color(1F, 1F, 1F, 1F);
+						((IBaubleRender) cosmetic.getItem()).onPlayerBaubleRender(cosmetic, player, partialTicks, type);
+						GlStateManager.popMatrix();
+						continue;
+					}
+				}
 
-                if (item instanceof IBaubleRender) {
-                    GlStateManager.pushMatrix();
-                    GlStateManager.color(1F, 1F, 1F, 1F);
-                    ((IBaubleRender) stack.getItem()).onPlayerBaubleRender(stack, player, partialTicks, type);
-                    GlStateManager.popMatrix();
-                }
-            }
-        }
-    }
+				if (item instanceof IBaubleRender) {
+					GlStateManager.pushMatrix();
+					GlStateManager.color(1F, 1F, 1F, 1F);
+					((IBaubleRender) stack.getItem()).onPlayerBaubleRender(stack, player, partialTicks, type);
+					GlStateManager.popMatrix();
+				}
+			}
+		}
+	}
 
-    private void renderManaTablet(EntityPlayer player) {
-        boolean renderedOne = false;
-        for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            ItemStack stack = player.inventory.getStackInSlot(i);
-            if (stack != null && stack.getItem() == ModItems.manaTablet) {
-                Item item = stack.getItem();
-                GlStateManager.pushMatrix();
-                Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-                IBaubleRender.Helper.rotateIfSneaking(player);
-                boolean armor = player.getCurrentArmor(1) != null;
-                GlStateManager.rotate(180F, 1F, 0F, 0F);
-                GlStateManager.rotate(90F, 0F, 1F, 0F);
-                GlStateManager.rotate(90, 1f, 0f, 0f);
-                GlStateManager.translate(0.025, renderedOne ? armor ? 0.2F : 0.16F : armor ? -0.385F : -0.35F, 1f);
-                GlStateManager.scale(0.75, 0.75F, 0.75F);
+	private void renderManaTablet(EntityPlayer player) {
+		boolean renderedOne = false;
+		for (int i = 0; i < player.inventory.getSizeInventory(); i++) {
+			ItemStack stack = player.inventory.getStackInSlot(i);
+			if (stack != null && stack.getItem() == ModItems.manaTablet) {
+				Item item = stack.getItem();
+				GlStateManager.pushMatrix();
+				Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
+				IBaubleRender.Helper.rotateIfSneaking(player);
+				boolean armor = player.getCurrentArmor(1) != null;
+				GlStateManager.rotate(180F, 1F, 0F, 0F);
+				GlStateManager.rotate(90F, 0F, 1F, 0F);
+				GlStateManager.rotate(90, 1f, 0f, 0f);
+				GlStateManager.translate(0.025, renderedOne ? armor ? 0.2F : 0.16F : armor ? -0.385F : -0.35F, 1f);
+				GlStateManager.scale(0.75, 0.75F, 0.75F);
 
-                GlStateManager.color(1F, 1F, 1F);
-                int light = 15728880;
-                int lightmapX = light % 65536;
-                int lightmapY = light / 65536;
-                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightmapX, lightmapY);
-                Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.THIRD_PERSON);
-                GlStateManager.popMatrix();
+				GlStateManager.color(1F, 1F, 1F);
+				int light = 15728880;
+				int lightmapX = light % 65536;
+				int lightmapY = light / 65536;
+				OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, lightmapX, lightmapY);
+				Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.THIRD_PERSON);
+				GlStateManager.popMatrix();
 
-                if (renderedOne)
-                    return;
-                renderedOne = true;
-            }
-        }
-    }
+				if (renderedOne)
+					return;
+				renderedOne = true;
+			}
+		}
+	}
 
-    @Override
-    public boolean shouldCombineTextures() {
-        return false;
-    }
+	@Override
+	public boolean shouldCombineTextures() {
+		return false;
+	}
 }
