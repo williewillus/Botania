@@ -106,15 +106,16 @@ public class ItemDivaCharm extends ItemBauble implements IManaUsingItem, IBauble
 		if(type == RenderType.HEAD) {
 			if (itemIcon == null) {
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(new ItemStack(this));
-				itemIcon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(model.getParticleTexture().getIconName());
+				itemIcon = model.getParticleTexture();
 			}
-            // TODO: Got charm rendering working, now to fix rotations!
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			Helper.rotateIfSneaking(player);
 			boolean armor = player.getCurrentArmor(2) != null;
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(-0.36F, -0.24F, armor ? 0.2F : 0.15F);
-			GlStateManager.rotate(-45F, 0F, 0F, 1F);
+			GlStateManager.translate(armor ? 0.35F : 0.3F, 0.225F, -0.4F);
+			GlStateManager.rotate(90F, 0F, 1F, 0F);
+			GlStateManager.rotate(90F, 0F, 0F, 1F);
+
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			float f = itemIcon.getMinU();
 			float f1 = itemIcon.getMaxU();

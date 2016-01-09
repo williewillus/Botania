@@ -84,45 +84,45 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 			case 2:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.5F, 0F);
+				GlStateManager.translate(0.04F, -2.45F, 0F);
 				renderIcon(2);
 				break;
 			case 4:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.5F, 0F);
+				GlStateManager.translate(0.04F, -2.45F, 0F);
 				renderIcon(4);
 				break;
 			case 5:
 				faceTranslate();
 				scale(0.35F);
-				GlStateManager.translate(0.3F, -0.5F, 0F);
+				GlStateManager.translate(0.3F, -4.65F, 0F);
 				renderIcon(5);
 				break;
 			case 6:
 				faceTranslate();
 				scale(0.35F);
-				GlStateManager.translate(0.9F, -0.5F, 0F);
+				GlStateManager.translate(0.9F, -4.65F, 0F);
 				renderIcon(6);
 				break;
 			case 7:
 				faceTranslate();
 				scale(0.6F);
-				GlStateManager.translate(0.2F, 0.3F, 0.6F);
+				GlStateManager.translate(0.2F, -2.15F, 0.6F);
 				renderIcon(7);
 				break;
 			case 8:
 				faceTranslate();
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				scale(0.6F);
-				GlStateManager.translate(-0.9F, 0F, 0.2F);
+				GlStateManager.translate(-0.9F, -2.45F, 0.2F);
 				renderIcon(8);
 				break;
 			case 9:
 				faceTranslate();
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				scale(0.6F);
-				GlStateManager.translate(-0.9F, -0.2F, 0.2F);
+				GlStateManager.translate(-0.9F, -2.5F, 0.2F);
 				renderIcon(9);
 				GlStateManager.translate(0F, 0F, 1F);
 				renderIcon(9);
@@ -131,7 +131,7 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				faceTranslate();
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
 				scale(0.4F);
-				GlStateManager.translate(-0.5F, -0.1F, 0.3F);
+				GlStateManager.translate(-0.5F, -3.25F, 0.3F);
 				GlStateManager.rotate(120F, 0F, 1F, 0F);
 				renderIcon(10);
 				GlStateManager.rotate(-100F, 0F, 1F, 0F);
@@ -140,37 +140,37 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 			case 11:
 				faceTranslate();
 				scale(0.6F);
-				GlStateManager.translate(0.2F, -0.1F, 0.6F);
+				GlStateManager.translate(0.2F, -2.45F, 0.6F);
 				renderIcon(11);
 				break;
 			case 15:
 				faceTranslate();
-				GlStateManager.translate(-0.1F, -0.55F, 0F);
+				GlStateManager.translate(-0.1F, -2F, 0F);
 				renderIcon(15);
 				break;
 			case 17:
 				faceTranslate();
 				scale(0.35F);
-				GlStateManager.translate(0.3F, -0.6F, 0F);
+				GlStateManager.translate(0.3F, -4.65F, 0F);
 				renderIcon(17);
 				break;
 			case 18:
 				faceTranslate();
 				scale(0.75F);
 				GlStateManager.rotate(90F, 0F, 1F, 0F);
-				GlStateManager.translate(-0.3F, 0.1F, 0.55F);
+				GlStateManager.translate(-0.3F, -2.1F, 0.55F);
 				renderIcon(18);
 				break;
 			case 19:
 				faceTranslate();
 				scale(0.6F);
-				GlStateManager.translate(0.2F, -0.2F, 0.1F);
+				GlStateManager.translate(0.2F, -2.7F, 0.1F);
 				renderIcon(19);
 				break;
 			case 20:
 				faceTranslate();
 				scale(0.25F);
-				GlStateManager.translate(0.4F, 0.5F, -0.1F);
+				GlStateManager.translate(0.4F, -5.45F, -0.1F);
 				renderIcon(20);
 				GlStateManager.translate(1.4F, 0F, 0F);
 				renderIcon(20);
@@ -178,31 +178,31 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 			case 22:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.4F, 0F);
+				GlStateManager.translate(0.04F, -2.35F, 0F);
 				renderIcon(22);
 				break;
 			case 23:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.4F, 0F);
+				GlStateManager.translate(0.04F, -2.35F, 0F);
 				renderIcon(23);
 				break;
 			case 24:
 				faceTranslate();
 				scale(0.6F);
-				GlStateManager.translate(0.5F, 0F, 0.1F);
+				GlStateManager.translate(0.5F, -2.5F, 0.1F);
 				GlStateManager.rotate(60F, 0F, 0F, 1F);
 				renderIcon(24);
 				break;
 			case 25:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.5F, 0F);
+				GlStateManager.translate(0.04F, -2.45F, 0F);
 				renderIcon(25);
 				break;
 			case 26:
 				faceTranslate();
-				GlStateManager.translate(-0.1F, -0.5F, 0F);
+				GlStateManager.translate(-0.1F, -1.9F, -0.01F);
 				GlStateManager.enableBlend();
 				GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 				GlStateManager.color(1F, 1F, 1F, 0.7F);
@@ -211,13 +211,13 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 			case 27:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.5F, 0F);
+				GlStateManager.translate(0.04F, -2.6F, 0F);
 				renderIcon(27);
 				break;
 			case 28:
 				faceTranslate();
 				scale(0.25F);
-				GlStateManager.translate(1.55F, -0.2F, -0.1F);
+				GlStateManager.translate(1.55F, -6.2F, -0.1F);
 				renderIcon(28);
 				GlStateManager.rotate(180F, 0F, 1F, 0F);
 				GlStateManager.translate(-0.1F, 0F, 0.1F);
@@ -226,13 +226,13 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 			case 30:
 				faceTranslate();
 				scale(0.75F);
-				GlStateManager.translate(0.04F, -0.4F, 0F);
+				GlStateManager.translate(0.04F, -2.35F, 0F);
 				renderIcon(30);
 				break;
 			case 31:
 				faceTranslate();
 				scale(0.5F);
-				GlStateManager.translate(0.3F, 0.7F, 0.5F);
+				GlStateManager.translate(0.3F, -2.35F, 0.5F);
 				renderIcon(31);
 				break;
 			}

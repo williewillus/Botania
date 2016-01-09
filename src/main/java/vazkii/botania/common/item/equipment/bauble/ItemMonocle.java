@@ -55,7 +55,7 @@ public class ItemMonocle extends ItemBauble implements IBurstViewerBauble, ICosm
 		if(type == RenderType.HEAD) {
 			if (itemIcon == null) {
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(new ItemStack(this));
-				itemIcon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(model.getParticleTexture().getIconName());
+				itemIcon = model.getParticleTexture();
 			}
 			float f = itemIcon.getMinU();
 			float f1 = itemIcon.getMaxU();
@@ -66,7 +66,7 @@ public class ItemMonocle extends ItemBauble implements IBurstViewerBauble, ICosm
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(-0.35F, -0.1F, armor ? -0.3F : -0.25F);
+			GlStateManager.translate(-0.35F, -1.55F, armor ? -0.3F : -0.25F);
 			GlStateManager.scale(0.35F, 0.35F, 0.35F);
 			IconHelper.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 16F);
 		}

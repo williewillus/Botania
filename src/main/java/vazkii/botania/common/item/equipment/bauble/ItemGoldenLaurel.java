@@ -72,7 +72,7 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 		if(type == RenderType.HEAD) {
 			if (itemIcon == null) {
 				IBakedModel model = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getItemModel(new ItemStack(this));
-				itemIcon = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(model.getParticleTexture().getIconName());
+				itemIcon = model.getParticleTexture();
 			}
 			float f = itemIcon.getMinU();
 			float f1 = itemIcon.getMaxU();
@@ -84,7 +84,7 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 			GlStateManager.rotate(180F, 0F, 0F, 1F);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(-100F, 1F, 0F, 0F);
-			GlStateManager.translate(-0.5F, -0.55F, 0.3F);
+			GlStateManager.translate(-0.5F, -0.3F, -1.15F);
 			if(armor) {
 				GlStateManager.scale(1.1F, 1.1F, 1F);
 				GlStateManager.translate(-0.05F, -0.1F, 0F);

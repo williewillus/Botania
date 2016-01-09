@@ -35,7 +35,7 @@ import baubles.common.lib.PlayerHandler;
 public final class BaubleRenderHandler implements LayerRenderer<EntityPlayer> {
 
     @Override
-    public void doRenderLayer(EntityPlayer player, float f0, float f1, float partialTicks, float f3, float yaw, float pitch, float scale) {
+    public void doRenderLayer(EntityPlayer player, float f0, float f1, float partialTicks, float f3, float f4, float f5, float scale) {
         if (!ConfigHandler.renderBaubles || player.getActivePotionEffect(Potion.invisibility) != null)
             return;
         InventoryBaubles inv = PlayerHandler.getPlayerBaubles(player);
@@ -43,7 +43,9 @@ public final class BaubleRenderHandler implements LayerRenderer<EntityPlayer> {
         if (inv.getStackInSlot(3) != null)
             renderManaTablet(player);
 
+        float yaw = player.prevRotationYawHead + (player.rotationYawHead - player.prevRotationYawHead) * partialTicks;
         float yawOffset = player.prevRenderYawOffset + (player.renderYawOffset - player.prevRenderYawOffset) * partialTicks;
+        float pitch = player.prevRotationPitch + (player.rotationPitch - player.prevRotationPitch) * partialTicks;
 
         GlStateManager.pushMatrix();
         GlStateManager.rotate(yawOffset, 0, -1, 0);
