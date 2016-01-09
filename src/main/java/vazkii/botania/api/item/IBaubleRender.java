@@ -37,7 +37,7 @@ public interface IBaubleRender {
 	 * has a cosmetic bauble attached to it.
 	 */
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type);
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type);
 
 	/**
 	 * A few helper methods for the render.

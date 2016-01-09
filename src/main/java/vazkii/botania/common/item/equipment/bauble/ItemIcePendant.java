@@ -110,11 +110,11 @@ public class ItemIcePendant extends ItemBauble implements IBaubleRender {
 	}
 
 	@Override
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		/*if(type == RenderType.BODY) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-			Helper.rotateIfSneaking(event.entityPlayer);
-			boolean armor = event.entityPlayer.getCurrentArmor(2) != null;
+			Helper.rotateIfSneaking(player);
+			boolean armor = player.getCurrentArmor(2) != null;
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
 			GlStateManager.translate(-0.36F, -0.3F, armor ? 0.2F : 0.15F);
 			GlStateManager.rotate(-45F, 0F, 0F, 1F);

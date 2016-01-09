@@ -73,10 +73,10 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 	}
 
 	@Override
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 		if(type == RenderType.HEAD) {
-			Helper.translateToHeadLevel(event.entityPlayer);
+			Helper.translateToHeadLevel(player);
 			switch(stack.getItemDamage()) {
 			case 2:
 				faceTranslate();
@@ -234,7 +234,7 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 				break;
 			}
 		} else {
-			Helper.rotateIfSneaking(event.entityPlayer);
+			Helper.rotateIfSneaking(player);
 			switch(stack.getItemDamage()) {
 			case 0:
 				chestTranslate();

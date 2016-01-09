@@ -212,15 +212,15 @@ public class ItemItemFinder extends ItemBauble implements IBaubleRender {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 /*
 		if(type == RenderType.HEAD) {
 			float f = gemIcon.getMinU();
 			float f1 = gemIcon.getMaxU();
 			float f2 = gemIcon.getMinV();
 			float f3 = gemIcon.getMaxV();
-			boolean armor = event.entityPlayer.getCurrentArmor(3) != null;
-			Helper.translateToHeadLevel(event.entityPlayer);
+			boolean armor = player.getCurrentArmor(3) != null;
+			Helper.translateToHeadLevel(player);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
