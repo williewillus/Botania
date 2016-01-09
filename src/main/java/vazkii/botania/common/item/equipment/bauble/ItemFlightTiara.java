@@ -38,6 +38,7 @@ import net.minecraft.stats.Achievement;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
 import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
 
@@ -326,6 +327,12 @@ public class ItemFlightTiara extends ItemBauble implements IManaUsingItem, IBaub
 	@Override
 	public boolean usesMana(ItemStack stack) {
 		return true;
+	}
+
+	@SubscribeEvent
+	@SideOnly(Side.CLIENT)
+	public void onTextureStitch(TextureStitchEvent evt) {
+
 	}
 
 	@Override

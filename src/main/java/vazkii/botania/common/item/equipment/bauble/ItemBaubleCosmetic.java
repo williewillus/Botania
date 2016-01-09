@@ -14,15 +14,16 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.StatCollector;
-import net.minecraftforge.client.event.RenderPlayerEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.RecipeSorter;
 import net.minecraftforge.oredict.RecipeSorter.Category;
 
@@ -38,7 +39,9 @@ import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 
-	private static final int SUBTYPES = 32;
+	public static final int SUBTYPES = 32;
+	@SideOnly(Side.CLIENT)
+	public static TextureAtlasSprite[] sprites;
 
 	public ItemBaubleCosmetic() {
 		super(LibItemNames.COSMETIC);
@@ -317,13 +320,11 @@ public class ItemBaubleCosmetic extends ItemBauble implements ICosmeticBauble {
 	}
 
 	public void renderIcon(int i) {
-/*
-		IIcon icon = icons[i];
-		float f = icon.getMinU();
-		float f1 = icon.getMaxU();
-		float f2 = icon.getMinV();
-		float f3 = icon.getMaxV();
-		ItemRenderer.renderItemIn2D(Tessellator.getInstance(), f1, f2, f, f3, icon.getIconWidth(), icon.getIconHeight(), 1F / 16F);
-*/
+		TextureAtlasSprite sprite = sprites[i];
+		float f = sprite.getMinU();
+		float f1 = sprite.getMaxU();
+		float f2 = sprite.getMinV();
+		float f3 = sprite.getMaxV();
+		IconHelper.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, sprite.getIconWidth(), sprite.getIconHeight(), 1F / 16F);
 	}
 }

@@ -11,15 +11,15 @@
 package vazkii.botania.common.item.equipment.bauble;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-
-import org.lwjgl.opengl.GL11;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 import vazkii.botania.api.item.IBaubleRender;
 import vazkii.botania.client.core.helper.IconHelper;
@@ -28,7 +28,8 @@ import baubles.api.BaubleType;
 
 public class ItemLavaPendant extends ItemBauble implements IBaubleRender {
 
-	//IIcon gemIcon;
+	@SideOnly(Side.CLIENT)
+	public static TextureAtlasSprite gemIcon;
 
 	public ItemLavaPendant() {
 		super(LibItemNames.LAVA_PENDANT);
@@ -45,17 +46,11 @@ public class ItemLavaPendant extends ItemBauble implements IBaubleRender {
 		return BaubleType.AMULET;
 	}
 
-	/*@Override
-	public void registerIcons(IIconRegister par1IconRegister) {
-		super.registerIcons(par1IconRegister);
-		gemIcon = IconHelper.forItem(par1IconRegister, this, "Gem");
-	}*/
 
 	@Override
 	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
-/*
 		if(type == RenderType.BODY) {
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			Helper.rotateIfSneaking(player);
 			boolean armor = player.getCurrentArmor(2) != null;
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
@@ -67,9 +62,8 @@ public class ItemLavaPendant extends ItemBauble implements IBaubleRender {
 			float f1 = gemIcon.getMaxU();
 			float f2 = gemIcon.getMinV();
 			float f3 = gemIcon.getMaxV();
-			ItemRenderer.renderItemIn2D(Tessellator.getInstance(), f1, f2, f, f3, gemIcon.getIconWidth(), gemIcon.getIconHeight(), 1F / 32F);
+			IconHelper.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, gemIcon.getIconWidth(), gemIcon.getIconHeight(), 1F / 32F);
 		}
-*/
 	}
 
 }

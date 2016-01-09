@@ -2,10 +2,10 @@
  * This class was created by <Vazkii>. It's distributed as
  * part of the Botania Mod. Get the Source Code in github:
  * https://github.com/Vazkii/Botania
- * 
+ *
  * Botania is Open Source and distributed under the
  * Botania License: http://botaniamod.net/license.php
- * 
+ *
  * File Created @ [Apr 14, 2014, 3:13:05 PM (GMT)]
  */
 package vazkii.botania.common.item.equipment.armor.terrasteel;
@@ -14,7 +14,6 @@ import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
@@ -25,12 +24,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.StatCollector;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-import net.minecraftforge.client.event.TextureStitchEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-
-import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.item.IAncientWillContainer;
 import vazkii.botania.api.item.IBaubleRender.Helper;
@@ -47,7 +42,8 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDiscountArmor, IAncientWillContainer, IManaGivingItem {
 
 	private static final String TAG_ANCIENT_WILL = "AncientWill";
-	static TextureAtlasSprite willIcon;
+	@SideOnly(Side.CLIENT)
+	public static TextureAtlasSprite willIcon;
 
 	public ItemTerrasteelHelm() {
 		this(LibItemNames.TERRASTEEL_HELM);
@@ -56,12 +52,6 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	public ItemTerrasteelHelm(String name) {
 		super(0, name);
-	}
-
-	@SubscribeEvent
-	@SideOnly(Side.CLIENT)
-	public void onTextureStitch(TextureStitchEvent evt) {
-		willIcon = IconHelper.forName(evt.map, "willFlame", "items");
 	}
 
 	@Override
@@ -113,7 +103,6 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 
 	@SideOnly(Side.CLIENT)
 	public static void renderOnPlayer(ItemStack stack, EntityPlayer player) {
-/*
 		if(hasAnyWill(stack) && !((ItemTerrasteelArmor) stack.getItem()).hasPhantomInk(stack)) {
 			GlStateManager.pushMatrix();
 			float f = willIcon.getMinU();
@@ -126,10 +115,9 @@ public class ItemTerrasteelHelm extends ItemTerrasteelArmor implements IManaDisc
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
 			GlStateManager.translate(-0.26F, 0.15F, -0.39F);
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
-			IconHelper.renderItemIn2D(Tessellator.getInstance(), f1, f2, f, f3, willIcon.getIconWidth(), willIcon.getIconHeight(), 1F / 16F);
+			IconHelper.renderIconIn3D(Tessellator.getInstance(), f1, f2, f, f3, willIcon.getIconWidth(), willIcon.getIconHeight(), 1F / 16F);
 			GlStateManager.popMatrix();
 		}
-*/
 	}
 
 	@SubscribeEvent
