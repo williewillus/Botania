@@ -106,8 +106,8 @@ public final class BaubleRenderHandler implements LayerRenderer<EntityPlayer> {
                 GlStateManager.rotate(180F, 1F, 0F, 0F);
                 GlStateManager.rotate(90F, 0F, 1F, 0F);
                 GlStateManager.rotate(90, 1f, 0f, 0f);
-                GlStateManager.translate(0.025, renderedOne ? armor ? 0.225F : 0.19F : armor ? -0.35F : -0.315F, 1f);
-                GlStateManager.scale(0.5F, 0.5F, 0.5F);
+                GlStateManager.translate(0.025, renderedOne ? armor ? 0.2F : 0.16F : armor ? -0.385F : -0.35F, 1f);
+                GlStateManager.scale(0.75, 0.75F, 0.75F);
 
                 GlStateManager.color(1F, 1F, 1F);
                 int light = 15728880;
