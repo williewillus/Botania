@@ -154,10 +154,10 @@ public class ItemTravelBelt extends ItemBauble implements IBaubleRender, IManaUs
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.BODY) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(getRenderTexture());
-			Helper.rotateIfSneaking(event.entityPlayer);
+			Helper.rotateIfSneaking(player);
 
 			GlStateManager.translate(0F, 0.2F, 0F);
 

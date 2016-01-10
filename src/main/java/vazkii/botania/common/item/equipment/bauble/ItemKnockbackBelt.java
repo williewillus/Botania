@@ -15,6 +15,7 @@ import net.minecraft.client.model.ModelBiped;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderPlayerEvent;
@@ -52,10 +53,10 @@ public class ItemKnockbackBelt extends ItemBaubleModifier implements IBaubleRend
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.BODY) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-			Helper.rotateIfSneaking(event.entityPlayer);
+			Helper.rotateIfSneaking(player);
 
 			GlStateManager.translate(0F, 0.2F, 0F);
 

@@ -14,9 +14,7 @@ import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Blocks;
@@ -25,9 +23,6 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MovingObjectPosition;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-
-import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.item.IBurstViewerBauble;
 import vazkii.botania.api.item.ICosmeticAttachable;
@@ -50,23 +45,17 @@ public class ItemMonocle extends ItemBauble implements IBurstViewerBauble, ICosm
 	}
 
 	@Override
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
-/*
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.HEAD) {
-			float f = itemIcon.getMinU();
-			float f1 = itemIcon.getMaxU();
-			float f2 = itemIcon.getMinV();
-			float f3 = itemIcon.getMaxV();
-			boolean armor = event.entityPlayer.getCurrentArmor(3) != null;
-			Helper.translateToHeadLevel(event.entityPlayer);
-			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationItemsTexture);
+			boolean armor = player.getCurrentArmor(3) != null;
+			Helper.translateToHeadLevel(player);
+			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(180F, 1F, 0F, 0F);
-			GlStateManager.translate(-0.35F, -0.1F, armor ? -0.3F : -0.25F);
-			GlStateManager.scale(0.35F, 0.35F, 0.35F);
-			ItemRenderer.renderItemIn2D(Tessellator.getInstance(), f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 16F);
+			GlStateManager.translate(-0.15F, -1.425F, armor ? -0.3F : -0.25F);
+			GlStateManager.scale(-0.35F, 0.35F, 0.35F);
+			Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		}
-*/
 	}
 
 	@SideOnly(Side.CLIENT)

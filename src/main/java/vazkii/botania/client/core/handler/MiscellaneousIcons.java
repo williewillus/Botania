@@ -24,7 +24,8 @@ import vazkii.botania.client.model.PylonItemModel;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.integration.buildcraft.TriggerManaLevel;
 import vazkii.botania.common.item.ItemSparkUpgrade;
-import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
+import vazkii.botania.common.item.equipment.armor.terrasteel.ItemTerrasteelHelm;
+import vazkii.botania.common.item.equipment.bauble.*;
 import vazkii.botania.common.item.relic.ItemKingKey;
 
 import java.util.Map;
@@ -121,10 +122,21 @@ public class MiscellaneousIcons {
             manaLevelTriggerIcons.put(s, IconHelper.forName(evt.map, "triggers/mana" + WordUtils.capitalizeFully(s.name()), "items"));
         }
 
+        stitchBaubleTextures(evt);
+    }
+
+    private void  stitchBaubleTextures(TextureStitchEvent evt) {
+        ItemTerrasteelHelm.willIcon = IconHelper.forName(evt.map, "willFlame", "items");
+
         tiaraWingIcons = new TextureAtlasSprite[ItemFlightTiara.WING_TYPES];
         for (int i = 0; i < tiaraWingIcons.length; i++) {
             tiaraWingIcons[i] = IconHelper.forName(evt.map, "flightTiara" + i, "items");
         }
+
+        ItemIcePendant.gemIcon = IconHelper.forName(evt.map, "icePendantGem", "items");
+        ItemItemFinder.gemIcon = IconHelper.forName(evt.map, "itemFinderGem", "items");
+        ItemLavaPendant.gemIcon = IconHelper.forName(evt.map, "lavaPendantGem", "items");
+        ItemSuperLavaPendant.gemIcon = IconHelper.forName(evt.map, "superLavaPendantGem", "items");
     }
 
     private MiscellaneousIcons() {}

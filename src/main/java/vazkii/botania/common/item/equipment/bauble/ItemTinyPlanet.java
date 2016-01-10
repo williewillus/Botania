@@ -2,10 +2,10 @@
  * This class was created by <Vazkii>. It's distributed as
  * part of the Botania Mod. Get the Source Code in github:
  * https://github.com/Vazkii/Botania
- * 
+ *
  * Botania is Open Source and distributed under the
  * Botania License: http://botaniamod.net/license.php
- * 
+ *
  * File Created @ [Apr 20, 2014, 10:58:00 PM (GMT)]
  */
 package vazkii.botania.common.item.equipment.bauble;
@@ -18,13 +18,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.world.World;
-import net.minecraftforge.client.event.RenderPlayerEvent;
-
-import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.internal.IManaBurst;
 import vazkii.botania.api.item.IBaubleRender;
@@ -104,13 +102,12 @@ public class ItemTinyPlanet extends ItemBauble implements IBaubleRender {
 	}
 
 	@Override
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.HEAD) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
-			GlStateManager.translate(0.25F, -0.5F, 0F);
+			GlStateManager.translate(0F, -0.75F, 0.25F);
 			GlStateManager.scale(0.5F, 0.5F, 0.5F);
 			Minecraft.getMinecraft().getBlockRendererDispatcher().renderBlockBrightness(ModBlocks.tinyPlanet.getDefaultState(), 1.0F);
-//			RenderBlocks.getInstance().renderBlockAsItem(ModBlocks.tinyPlanet, 0, 1F); todo 1.8
 		}
 	}
 

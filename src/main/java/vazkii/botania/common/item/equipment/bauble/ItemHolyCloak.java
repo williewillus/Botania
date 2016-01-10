@@ -128,11 +128,11 @@ public class ItemHolyCloak extends ItemBauble implements IBaubleRender {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.BODY) {
 			Minecraft.getMinecraft().renderEngine.bindTexture(getRenderTexture());
-			Helper.rotateIfSneaking(event.entityPlayer);
-			boolean armor = event.entityPlayer.getCurrentArmor(2) != null;
+			Helper.rotateIfSneaking(player);
+			boolean armor = player.getCurrentArmor(2) != null;
 			GlStateManager.translate(0F, armor ? -0.07F : -0.01F, 0F);
 
 			float s = 0.1F;

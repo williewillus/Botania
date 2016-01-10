@@ -12,19 +12,15 @@ package vazkii.botania.common.item.equipment.bauble;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
-import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ChatComponentTranslation;
-import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
-
-import org.lwjgl.opengl.GL11;
 
 import vazkii.botania.api.item.IBaubleRender;
 import vazkii.botania.common.lib.LibItemNames;
@@ -66,26 +62,18 @@ public class ItemGoldenLaurel extends ItemBauble implements IBaubleRender {
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void onPlayerBaubleRender(ItemStack stack, RenderPlayerEvent event, RenderType type) {
-/*
+	public void onPlayerBaubleRender(ItemStack stack, EntityPlayer player, float partialTicks, RenderType type) {
 		if(type == RenderType.HEAD) {
-			float f = itemIcon.getMinU();
-			float f1 = itemIcon.getMaxU();
-			float f2 = itemIcon.getMinV();
-			float f3 = itemIcon.getMaxV();
-			boolean armor = event.entityPlayer.getCurrentArmor(3) != null;
-			Helper.translateToHeadLevel(event.entityPlayer);
+			boolean armor = player.getCurrentArmor(3) != null;
+			Helper.translateToHeadLevel(player);
 			Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.locationBlocksTexture);
 			GlStateManager.rotate(180F, 0F, 0F, 1F);
 			GlStateManager.rotate(90F, 0F, 1F, 0F);
 			GlStateManager.rotate(-100F, 1F, 0F, 0F);
-			GlStateManager.translate(-0.5F, -0.55F, 0.3F);
-			if(armor) {
+			GlStateManager.translate(0F, 0.2F, -1.15F);
+			if(armor)
 				GlStateManager.scale(1.1F, 1.1F, 1F);
-				GlStateManager.translate(-0.05F, -0.1F, 0F);
-			}
-			ItemRenderer.renderItemIn2D(Tessellator.getInstance(), f1, f2, f, f3, itemIcon.getIconWidth(), itemIcon.getIconHeight(), 1F / 32F);
+			Minecraft.getMinecraft().getRenderItem().renderItem(stack, ItemCameraTransforms.TransformType.NONE);
 		}
-*/
 	}
 }
