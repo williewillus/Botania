@@ -14,7 +14,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -23,14 +22,11 @@ import net.minecraft.util.ITickable;
 import net.minecraft.util.StatCollector;
 import net.minecraft.util.StringUtils;
 
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-
 import vazkii.botania.api.internal.VanillaPacketDispatcher;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileHourglass extends TileSimpleInventory implements ITickable {
+public class TileHourglass extends TileSimpleInventory {
 
 	private static final String TAG_TIME = "time";
 	private static final String TAG_TIME_FRACTION = "timeFraction";
@@ -47,8 +43,7 @@ public class TileHourglass extends TileSimpleInventory implements ITickable {
 	public boolean move = true;
 
 	@Override
-	public void update() {
-
+	public void updateEntity() {
 		int totalTime = getTotalTime();
 		if(totalTime > 0) {
 			if(move)

@@ -10,21 +10,16 @@
  */
 package vazkii.botania.common.block.tile;
 
-import net.minecraft.entity.passive.EntitySheep;
-import net.minecraft.item.EnumDyeColor;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.EnumFacing;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 
-public class TileManaBeacon extends TileMod implements ITickable {
+public class TileManaBeacon extends TileMod {
 
 	@Override
-	public void update() {
-		if (worldObj.getBlockState(getPos()).getBlock() != ModBlocks.manaBeacon)
-			return;
-
+	public void updateEntity() {
 		boolean redstone = false;
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			int redstoneSide = worldObj.getRedstonePower(pos.offset(dir), dir);

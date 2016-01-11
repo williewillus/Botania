@@ -10,24 +10,20 @@
  */
 package vazkii.botania.client.render.tile;
 
-import java.awt.Color;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 
 import vazkii.botania.api.item.IAvatarWieldable;
+import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.model.ModelAvatar;
@@ -44,17 +40,23 @@ public class RenderTileAvatar extends TileEntitySpecialRenderer<TileAvatar> {
 
 	@Override
 	public void renderTileEntityAt(TileAvatar avatar, double d0, double d1, double d2, float pticks, int digProgress) {
+		if (avatar != null && avatar.getWorld() != null && !avatar.getWorld().isBlockLoaded(avatar.getPos(), false)) {
+			return;
+		}
+
 		GlStateManager.pushMatrix();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.color(1F, 1F, 1F, 1F);
 		GlStateManager.translate(d0, d1, d2);
 
 		Minecraft.getMinecraft().renderEngine.bindTexture(texture);
-		int meta = avatar != null && avatar.getWorld() != null ? avatar.getBlockMetadata() : 0;
+		EnumFacing facing = avatar != null && avatar.getWorld() != null
+				? avatar.getWorld().getBlockState(avatar.getPos()).getValue(BotaniaStateProps.CARDINALS)
+				: EnumFacing.SOUTH;
 
 		GlStateManager.translate(0.5F, 1.6F, 0.5F);
 		GlStateManager.scale(1F, -1F, -1F);
-		GlStateManager.rotate(ROTATIONS[Math.max(Math.min(ROTATIONS.length - 1, meta - 2), 0)], 0F, 1F, 0F);
+		GlStateManager.rotate(ROTATIONS[Math.max(Math.min(ROTATIONS.length - 1, facing.getIndex() - 2), 0)], 0F, 1F, 0F);
 		model.render();
 
 		if (avatar == null) {

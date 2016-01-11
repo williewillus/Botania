@@ -45,7 +45,7 @@ import vazkii.botania.common.lexicon.LexiconData;
 
 import com.google.common.base.Function;
 
-public class TileAlfPortal extends TileMod implements ITickable {
+public class TileAlfPortal extends TileMod {
 
 	private static final BlockPos[] LIVINGWOOD_POSITIONS = {
 		new BlockPos(-1, 0, 0), new BlockPos(1, 0, 0), new BlockPos(-2, 1, 0),
@@ -84,26 +84,11 @@ public class TileAlfPortal extends TileMod implements ITickable {
 	private boolean closeNow = false;
 	private boolean hasUnloadedParts = false;
 
-	private static final Function<BlockPos, BlockPos> CONVERTER_X_Z = new Function<BlockPos, BlockPos>() {
-		@Override
-		public BlockPos apply(BlockPos input) {
-			return new BlockPos(input.getZ(), input.getY(), input.getX());
-		}
-	};
+	private static final Function<BlockPos, BlockPos> CONVERTER_X_Z = input -> new BlockPos(input.getZ(), input.getY(), input.getX());
 
-	private static final Function<double[], double[]> CONVERTER_X_Z_FP = new Function<double[], double[]>() {
-		@Override
-		public double[] apply(double[] input) {
-			return new double[] { input[2], input[1], input[0] };
-		}
-	};
+	private static final Function<double[], double[]> CONVERTER_X_Z_FP = input -> new double[] { input[2], input[1], input[0] };
 
-	private static final Function<BlockPos, BlockPos> CONVERTER_Z_SWAP = new Function<BlockPos, BlockPos>() {
-		@Override
-		public BlockPos apply(BlockPos input) {
-			return new BlockPos(input.getX(), input.getY(), -input.getZ());
-		}
-	};
+	private static final Function<BlockPos, BlockPos> CONVERTER_Z_SWAP = input -> new BlockPos(input.getX(), input.getY(), -input.getZ());
 
 	public static MultiblockSet makeMultiblockSet() {
 		Multiblock mb = new Multiblock();
@@ -124,11 +109,10 @@ public class TileAlfPortal extends TileMod implements ITickable {
 	}
 
 	@Override
-	public void update() {
+	public void updateEntity() {
 		IBlockState iBlockState = worldObj.getBlockState(getPos());
-		if(iBlockState.getBlock() != ModBlocks.alfPortal || iBlockState.getValue(BotaniaStateProps.ALFPORTAL_STATE) == AlfPortalState.OFF) {
-			if (iBlockState.getBlock() == ModBlocks.alfPortal)
-				ticksOpen = 0;
+		if(iBlockState.getValue(BotaniaStateProps.ALFPORTAL_STATE) == AlfPortalState.OFF) {
+			ticksOpen = 0;
 			return;
 		}
 		AlfPortalState state = iBlockState.getValue(BotaniaStateProps.ALFPORTAL_STATE);
