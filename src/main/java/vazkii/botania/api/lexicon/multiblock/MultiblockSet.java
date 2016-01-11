@@ -12,6 +12,7 @@ package vazkii.botania.api.lexicon.multiblock;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 
 import java.util.Collections;
 import java.util.Map;

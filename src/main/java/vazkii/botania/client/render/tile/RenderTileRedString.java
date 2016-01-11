@@ -11,6 +11,7 @@
 package vazkii.botania.client.render.tile;
 
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import vazkii.botania.client.core.handler.RedStringRenderer;
 import vazkii.botania.common.block.tile.string.TileRedString;
 

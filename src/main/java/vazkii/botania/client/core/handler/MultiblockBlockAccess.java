@@ -10,6 +10,7 @@
  */
 package vazkii.botania.client.core.handler;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.tileentity.TileEntity;

@@ -23,7 +23,7 @@ import net.minecraftforge.fml.common.ObfuscationReflectionHelper;
 import vazkii.botania.common.lib.LibBlockNames;
 import vazkii.botania.common.lib.LibObfuscation;
 
-public class TileOpenCrate extends TileSimpleInventory {
+public class TileOpenCrate extends TileSimpleInventory implements ITickable {
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
@@ -41,7 +41,7 @@ public class TileOpenCrate extends TileSimpleInventory {
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		boolean redstone = false;
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			int redstoneSide = worldObj.getRedstonePower(pos.offset(dir), dir);

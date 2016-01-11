@@ -14,7 +14,7 @@ import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ITickable;
 
 
-public class TileTinyPotato extends TileMod {
+public class TileTinyPotato extends TileMod implements ITickable {
 
 	private static final String TAG_NAME = "name";
 
@@ -36,7 +36,7 @@ public class TileTinyPotato extends TileMod {
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if(worldObj.rand.nextInt(100) == 0)
 			jump();
 

@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
+import net.minecraftforge.common.MinecraftForge;
 import vazkii.botania.api.mana.IManaBlock;
 import vazkii.botania.api.mana.IManaReceiver;
 import vazkii.botania.common.block.tile.TileRuneAltar;
@@ -38,14 +39,14 @@ public class StatementAPIPlugin implements ITriggerProvider {
 
 	@Override
 	public Collection<ITriggerInternal> getInternalTriggers(IStatementContainer container) {
-		ArrayList<ITriggerInternal> list = new ArrayList<>();
+		ArrayList<ITriggerInternal> list = new ArrayList<ITriggerInternal>();
 		list.add(triggerManaDetector);
 		return list;
 	}
 
 	@Override
 	public Collection<ITriggerExternal> getExternalTriggers(EnumFacing side, TileEntity tile) {
-		ArrayList<ITriggerExternal> list = new ArrayList<>();
+		ArrayList<ITriggerExternal> list = new ArrayList<ITriggerExternal>();
 
 		if (tile instanceof IManaBlock) {
 			list.add(triggerManaEmpty);

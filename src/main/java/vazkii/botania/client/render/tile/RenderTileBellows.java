@@ -13,7 +13,11 @@ package vazkii.botania.client.render.tile;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.client.model.ModelBellows;
@@ -30,10 +34,6 @@ public class RenderTileBellows extends TileEntitySpecialRenderer<TileBellows> {
 
 	@Override
 	public void renderTileEntityAt(TileBellows bellows, double d0, double d1, double d2, float f, int digProgress) {
-		if (bellows != null && bellows.getWorld() != null && !bellows.getWorld().isBlockLoaded(bellows.getPos(), false)) {
-			return;
-		}
-		
 		GlStateManager.pushMatrix();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.color(1F, 1F, 1F, 1F);

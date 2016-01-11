@@ -21,6 +21,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ChatComponentText;
@@ -38,17 +39,23 @@ public class CorporeaAutoCompleteHandler {
 
 	boolean isAutoCompleted = false;
 	String originalString = "";
-	List<CompletionData> completions = new ArrayList<>();
+	List<CompletionData> completions = new ArrayList<CompletionData>();
 	int position;
 
-	static TreeSet<String> itemNames = new TreeSet<>(String::compareToIgnoreCase);
+	static TreeSet<String> itemNames = new TreeSet<String>(
+			new Comparator<String>() {
+				@Override
+				public int compare(String arg0, String arg1) {
+					return arg0.compareToIgnoreCase(arg1);
+				}
+			});
 
 	private boolean tabLastTick = false;
 
 	public static void updateItemList() {
 		itemNames.clear();
 		Iterator<Item> iterator = Item.itemRegistry.iterator();
-		ArrayList<ItemStack> curList = new ArrayList<>();
+		ArrayList<ItemStack> curList = new ArrayList<ItemStack>();
 
 		while(iterator.hasNext()) {
 			Item item = iterator.next();
@@ -139,7 +146,7 @@ public class CorporeaAutoCompleteHandler {
 		if(s.isEmpty())
 			return new ArrayList();
 				
-		TreeSet<CompletionData> result = new TreeSet<>();
+		TreeSet<CompletionData> result = new TreeSet<CompletionData>();
 		String[] words = s.split(" ");
 		int i = words.length - 1;
 		String curPrefix = words[i];
@@ -149,11 +156,11 @@ public class CorporeaAutoCompleteHandler {
 			if(i >= 0)
 				curPrefix = words[i] + " " + curPrefix;
 		}
-		return new ArrayList<>(result);
+		return new ArrayList<CompletionData>(result);
 	}
 
 	private List<CompletionData> getNamesStartingWith(String prefix) {
-		ArrayList<CompletionData> result = new ArrayList<>();
+		ArrayList<CompletionData> result = new ArrayList<CompletionData>();
 		int length = prefix.length();
 		SortedSet<String> after = itemNames.tailSet(prefix);
 		for(String str : after) {

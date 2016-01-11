@@ -22,12 +22,15 @@ import vazkii.botania.api.wand.ITileBound;
 import vazkii.botania.common.block.string.BlockRedString;
 import vazkii.botania.common.block.tile.TileMod;
 
-public abstract class TileRedString extends TileMod implements ITileBound {
+public abstract class TileRedString extends TileMod implements ITileBound, ITickable {
 
 	private BlockPos binding;
 
 	@Override
-	public void updateEntity() {
+	public void update() {
+		if (!(worldObj.getBlockState(getPos()).getBlock() instanceof BlockRedString))
+			return;
+
 		EnumFacing dir = getOrientation();
 		BlockPos pos_ = getPos();
 		int range = getRange();

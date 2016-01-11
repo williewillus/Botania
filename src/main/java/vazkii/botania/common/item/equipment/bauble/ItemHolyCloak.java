@@ -21,6 +21,8 @@ import net.minecraftforge.client.event.RenderPlayerEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
 
+import org.lwjgl.opengl.GL11;
+
 import vazkii.botania.api.item.IBaubleRender;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.Botania;

@@ -17,6 +17,8 @@ import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 
+import org.lwjgl.opengl.GL11;
+
 // This is pretty much a copypasta of GuiCrafting >_>
 public class GuiCraftingHalo extends GuiContainer {
 

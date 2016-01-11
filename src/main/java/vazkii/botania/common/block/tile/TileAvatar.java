@@ -19,7 +19,7 @@ import vazkii.botania.api.item.IAvatarTile;
 import vazkii.botania.api.item.IAvatarWieldable;
 import vazkii.botania.common.lib.LibBlockNames;
 
-public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISidedInventory {
+public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISidedInventory, ITickable {
 
 	private static final int MAX_MANA = 6400;
 
@@ -32,7 +32,8 @@ public class TileAvatar extends TileSimpleInventory implements IAvatarTile, ISid
 	int mana;
 
 	@Override
-	public void updateEntity() {
+	public void update() {
+
 		enabled = true;
 		for(EnumFacing dir : EnumFacing.VALUES) {
 			int redstoneSide = worldObj.getRedstonePower(pos.offset(dir), dir);
