@@ -14,6 +14,7 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.IChunkProvider;
 import net.minecraft.world.gen.ChunkProviderFlat;
+import net.minecraftforge.common.MinecraftForge;
 
 public class WorldTypeSkyblock extends WorldType {
 

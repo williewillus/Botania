@@ -20,12 +20,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import vazkii.botania.api.state.BotaniaStateProps;
 
-public class TileRedStringInterceptor extends TileRedString {
+public class TileRedStringInterceptor extends TileRedString implements ITickable {
 
 	public static List<TileRedStringInterceptor> interceptors = new ArrayList();
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if(!interceptors.contains(this))
 			interceptors.add(this);
 	}

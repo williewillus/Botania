@@ -13,6 +13,7 @@ package vazkii.botania.common.block.tile;
 import java.awt.Color;
 import java.util.List;
 
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.item.EntityItem;
@@ -20,9 +21,11 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.inventory.ISidedInventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.ITickable;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.world.World;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.brew.IBrewContainer;
 import vazkii.botania.api.brew.IBrewItem;
@@ -36,7 +39,7 @@ import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.lib.LibBlockNames;
 
 // This is mostly copypasta from TileRuneAltar
-public class TileBrewery extends TileSimpleInventory implements ISidedInventory, IManaReceiver {
+public class TileBrewery extends TileSimpleInventory implements ISidedInventory, IManaReceiver, ITickable {
 
 	private static final String TAG_MANA = "mana";
 
@@ -80,7 +83,8 @@ public class TileBrewery extends TileSimpleInventory implements ISidedInventory,
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
+
 		if(mana > 0 && recipe == null) {
 			for(RecipeBrew recipe : BotaniaAPI.brewRecipes)
 				if(recipe.matches(this)) {

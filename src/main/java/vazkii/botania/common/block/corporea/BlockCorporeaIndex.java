@@ -27,6 +27,7 @@ import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.api.state.enums.StorageVariant;
+import vazkii.botania.client.lib.LibRenderIDs;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.corporea.TileCorporeaBase;
 import vazkii.botania.common.block.tile.corporea.TileCorporeaIndex;

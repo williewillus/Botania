@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.google.common.base.Predicates;
+import com.google.common.collect.Maps;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
@@ -49,7 +50,7 @@ import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 
-public class TileEnchanter extends TileMod implements ISparkAttachable {
+public class TileEnchanter extends TileMod implements ISparkAttachable, ITickable {
 
 	private static final String TAG_STAGE = "stage";
 	private static final String TAG_STAGE_TICKS = "stageTicks";
@@ -79,7 +80,7 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 		new BlockPos(-2, -1, 0), new BlockPos(-2, -1, 1), new BlockPos(-2, -1, -1)
 	};
 
-	private static final Map<EnumFacing.Axis, BlockPos[]> PYLON_LOCATIONS = new EnumMap<>(EnumFacing.Axis.class);
+	private static final Map<EnumFacing.Axis, BlockPos[]> PYLON_LOCATIONS = new EnumMap<EnumFacing.Axis, BlockPos[]>(EnumFacing.Axis.class);
 
 	static {
 		PYLON_LOCATIONS.put(EnumFacing.Axis.X, new BlockPos[] { new BlockPos(-5, 1, 0), new BlockPos(5, 1, 0), new BlockPos(-4, 1, 3), new BlockPos(4, 1, 3), new BlockPos(-4, 1, -3 ), new BlockPos(4, 1, -3) });
@@ -133,8 +134,10 @@ public class TileEnchanter extends TileMod implements ISparkAttachable {
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		IBlockState state = worldObj.getBlockState(getPos());
+		if (state.getBlock() != ModBlocks.enchanter)
+			return;
 		EnumFacing.Axis axis = state.getValue(BotaniaStateProps.ENCHANTER_DIRECTION);
 
 		for(BlockPos pylon : PYLON_LOCATIONS.get(axis)) {

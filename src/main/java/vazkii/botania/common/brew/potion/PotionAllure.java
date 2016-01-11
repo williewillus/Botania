@@ -15,6 +15,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.projectile.EntityFishHook;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibPotionNames;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 

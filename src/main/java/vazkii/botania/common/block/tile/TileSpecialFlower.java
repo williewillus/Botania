@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.tile;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.block.BlockDirt;
@@ -35,7 +36,7 @@ import vazkii.botania.api.wand.IWandBindable;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.string.TileRedStringRelay;
 
-public class TileSpecialFlower extends TileMod implements IWandBindable, ISubTileSlowableContainer {
+public class TileSpecialFlower extends TileMod implements IWandBindable, ISubTileSlowableContainer, ITickable {
 
 	private static final String TAG_SUBTILE_NAME = "subTileName";
 	private static final String TAG_SUBTILE_CMP = "subTileCmp";
@@ -72,7 +73,7 @@ public class TileSpecialFlower extends TileMod implements IWandBindable, ISubTil
 	}
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		if(subTile != null) {
 			TileEntity tileBelow = worldObj.getTileEntity(pos.down());
 			if(tileBelow instanceof TileRedStringRelay) {

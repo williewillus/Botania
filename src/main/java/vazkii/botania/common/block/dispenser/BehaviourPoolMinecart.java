@@ -10,6 +10,7 @@
  */
 package vazkii.botania.common.block.dispenser;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockDispenser;
 import net.minecraft.block.BlockRailBase;
 import net.minecraft.block.material.Material;

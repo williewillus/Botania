@@ -13,6 +13,7 @@ package vazkii.botania.client.render.tile;
 import java.awt.Color;
 import java.util.Random;
 
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockCarpet;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -23,7 +24,11 @@ import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
+
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import vazkii.botania.api.mana.ILens;
 import vazkii.botania.client.core.handler.ClientTickHandler;
@@ -46,10 +51,6 @@ public class RenderTileSpreader extends TileEntitySpecialRenderer<TileSpreader> 
 
 	@Override
 	public void renderTileEntityAt(TileSpreader spreader, double d0, double d1, double d2, float ticks, int digProgress) {
-		if (spreader != null && spreader.getWorld() != null && !spreader.getWorld().isBlockLoaded(spreader.getPos(), false)) {
-			return;
-		}
-		
 		GlStateManager.pushMatrix();
 		GlStateManager.enableRescaleNormal();
 		GlStateManager.color(1F, 1F, 1F, 1F);

@@ -31,6 +31,7 @@ import net.minecraft.world.World;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
+import vazkii.botania.client.lib.LibRenderIDs;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.achievement.IPickupAchievement;
 import vazkii.botania.common.achievement.ModAchievements;

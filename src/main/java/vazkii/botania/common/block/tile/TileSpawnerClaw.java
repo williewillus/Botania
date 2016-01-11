@@ -13,6 +13,7 @@ package vazkii.botania.common.block.tile;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.sql.Ref;
 import java.util.List;
 
 import net.minecraft.entity.Entity;
@@ -30,7 +31,7 @@ import vazkii.botania.common.Botania;
 import vazkii.botania.common.lib.LibObfuscation;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 
-public class TileSpawnerClaw extends TileMod implements IManaReceiver {
+public class TileSpawnerClaw extends TileMod implements IManaReceiver, ITickable {
 
 	private static final String TAG_MANA = "mana";
 
@@ -44,7 +45,7 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
 	private static final Method getEntityNameToSpawn = ReflectionHelper.findMethod(MobSpawnerBaseLogic.class, null, LibObfuscation.GET_ENTITY_TO_SPAWN);
 
 	@Override
-	public void updateEntity() {
+	public void update() {
 		TileEntity tileBelow = worldObj.getTileEntity(pos.down());
 		if(mana >= 5 && tileBelow instanceof TileEntityMobSpawner) {
 			TileEntityMobSpawner spawner = (TileEntityMobSpawner) tileBelow;
@@ -114,7 +115,9 @@ public class TileSpawnerClaw extends TileMod implements IManaReceiver {
                     if (flag)
                         resetTimer(logic);
                 }
-			} catch (IllegalAccessException | InvocationTargetException e) {
+			} catch (IllegalAccessException e) {
+				e.printStackTrace();
+			} catch (InvocationTargetException e) {
 				e.printStackTrace();
 			}
 		}

@@ -1,5 +1,6 @@
 package vazkii.botania.common.item.equipment.tool.elementium;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
@@ -15,9 +16,12 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.world.World;
 import net.minecraftforge.common.IShearable;
+import vazkii.botania.client.core.helper.IconHelper;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.item.equipment.tool.manasteel.ItemManasteelShears;
 import vazkii.botania.common.lib.LibItemNames;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 
 public class ItemElementiumShears extends ItemManasteelShears {
 

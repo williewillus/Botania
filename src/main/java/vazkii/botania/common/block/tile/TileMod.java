@@ -17,10 +17,9 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.server.S35PacketUpdateTileEntity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ITickable;
 import net.minecraft.world.World;
 
-public class TileMod extends TileEntity implements ITickable {
+public class TileMod extends TileEntity {
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newState) {
@@ -60,19 +59,6 @@ public class TileMod extends TileEntity implements ITickable {
 	public void onDataPacket(NetworkManager net, S35PacketUpdateTileEntity packet) {
 		super.onDataPacket(net, packet);
 		readCustomNBT(packet.getNbtCompound());
-	}
-
-	@Override
-	public final void update() {
-		if (worldObj.isBlockLoaded(getPos(), false)) {
-			updateEntity();
-		} else {
-			System.out.println("Skipping a tick because our chunk unloaded");
-		}
-	}
-
-	protected void updateEntity() {
-		// NO-OP
 	}
 
 }

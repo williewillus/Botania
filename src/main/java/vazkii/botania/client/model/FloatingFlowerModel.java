@@ -12,6 +12,7 @@ import com.google.common.base.Function;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Iterables;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Table;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -35,6 +36,7 @@ import net.minecraftforge.client.model.pipeline.IVertexConsumer;
 import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexTransformer;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.decor.BlockFloatingFlower;
@@ -45,7 +47,7 @@ import vazkii.botania.common.item.block.ItemBlockSpecialFlower;
 import javax.vecmath.Vector3f;
 import javax.vecmath.Vector4f;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Map;
 
 public class FloatingFlowerModel implements ISmartItemModel, ISmartBlockModel, IResourceManagerReloadListener {
 
@@ -162,7 +164,9 @@ public class FloatingFlowerModel implements ISmartItemModel, ISmartBlockModel, I
             }
 
             for (EnumFacing e : EnumFacing.VALUES) {
-                genBuilder.addAll(flower.getFaceQuads(e).stream().map(input -> transform(input, transform)).collect(Collectors.toList()));
+                genBuilder.addAll(Iterables.transform(flower.getFaceQuads(e), new Function<BakedQuad, BakedQuad>() {
+                    @Override public BakedQuad apply(BakedQuad input) { return transform(input, transform); }
+                }));
             }
 
             // Add island quads

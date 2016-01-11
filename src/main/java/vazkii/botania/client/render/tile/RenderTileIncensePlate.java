@@ -10,16 +10,22 @@
  */
 package vazkii.botania.client.render.tile;
 
+import java.awt.Color;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
 
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.client.lib.LibResources;
@@ -37,11 +43,7 @@ public class RenderTileIncensePlate extends TileEntitySpecialRenderer<TileIncens
 
 	@Override
 	public void renderTileEntityAt(TileIncensePlate plate, double d0, double d1, double d2, float ticks, int digProgress) {
-		if (plate != null && plate.getWorld() != null && !plate.getWorld().isBlockLoaded(plate.getPos(), false)) {
-			return;
-		}
-		
-		EnumFacing facing = plate.getWorld().getBlockState(plate.getPos()).getValue(BotaniaStateProps.CARDINALS);
+		EnumFacing facing = plate.getWorld() != null ? plate.getWorld().getBlockState(plate.getPos()).getValue(BotaniaStateProps.CARDINALS) : EnumFacing.SOUTH;
 
 		GlStateManager.pushMatrix();
 		GlStateManager.enableRescaleNormal();

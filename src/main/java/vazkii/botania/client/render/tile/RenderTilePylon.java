@@ -17,9 +17,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ResourceLocation;
 
+import net.minecraftforge.client.event.ModelBakeEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.api.state.enums.PylonVariant;
@@ -51,10 +55,6 @@ public class RenderTilePylon extends TileEntitySpecialRenderer<TilePylon> {
 
 	@Override
 	public void renderTileEntityAt(TilePylon pylon, double d0, double d1, double d2, float pticks, int digProgress) {
-		if (pylon != null && pylon.getWorld() != null && !pylon.getWorld().isBlockLoaded(pylon.getPos(), false)) {
-			return;
-		}
-		
 		if(model == null)
 			model = ConfigHandler.oldPylonModel ? new ModelPylonOld() : new ModelPylon();
 
