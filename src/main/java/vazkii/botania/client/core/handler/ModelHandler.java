@@ -109,6 +109,7 @@ import vazkii.botania.common.block.tile.TileTeruTeruBozu;
 import vazkii.botania.common.block.tile.corporea.TileCorporeaCrystalCube;
 import vazkii.botania.common.block.tile.corporea.TileCorporeaIndex;
 import vazkii.botania.common.block.tile.mana.TileBellows;
+import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.item.ItemManaGun;
 import vazkii.botania.common.item.ItemSpawnerMover;
 import vazkii.botania.common.item.ItemTwigWand;
@@ -125,6 +126,7 @@ import vazkii.botania.common.lib.LibMisc;
 
 import static vazkii.botania.common.item.ModItems.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -703,33 +705,16 @@ public final class ModelHandler {
     }
 
     private static void registerStateMappers() {
-        // Override to let smartmodels work, see RenderEventHandler
-        ModelLoader.setCustomStateMapper(ModBlocks.floatingSpecialFlower, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("botania:floatingSpecialFlower", "normal");
-            }
-        });
-
-        ModelLoader.setCustomStateMapper(ModBlocks.floatingFlower, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("botania:miniIsland", "normal");
-            }
-        });
-
-        ModelLoader.setCustomStateMapper(ModBlocks.platform, new StateMapperBase() {
-            @Override
-            protected ModelResourceLocation getModelResourceLocation(IBlockState state) {
-                return new ModelResourceLocation("botania:platform", "normal");
-            }
-        });
+        // Override to let smart models work, see MiscellaneousIcons
+        ModelLoader.setCustomStateMapper(ModBlocks.floatingSpecialFlower, new StateMap.Builder().ignore(BotaniaStateProps.COLOR).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.floatingFlower, new StateMap.Builder().ignore(BotaniaStateProps.COLOR).build());
+        ModelLoader.setCustomStateMapper(ModBlocks.platform, new StateMap.Builder().ignore(BotaniaStateProps.PLATFORM_VARIANT).build());
 
         // Ignore vanilla facing, variant in double flower
         ModelLoader.setCustomStateMapper(ModBlocks.doubleFlower1, (new StateMap.Builder()).ignore(BlockDoublePlant.VARIANT, BlockDoublePlant.field_181084_N).build());
         ModelLoader.setCustomStateMapper(ModBlocks.doubleFlower2, (new StateMap.Builder()).ignore(BlockDoublePlant.VARIANT, BlockDoublePlant.field_181084_N).build());
 
-        // Ignore color in unstable cube, mana beacon, special flower, and petals (handled by color multiplier)
+        // Ignore color in unstable cube, mana beacon, special flower, and petals (handled by Block.colorMultiplier)
         ModelLoader.setCustomStateMapper(ModBlocks.unstableBlock, (new StateMap.Builder()).ignore(BotaniaStateProps.COLOR).build());
         ModelLoader.setCustomStateMapper(ModBlocks.manaBeacon, (new StateMap.Builder()).ignore(BotaniaStateProps.COLOR).build());
         ModelLoader.setCustomStateMapper(ModBlocks.petalBlock, (new StateMap.Builder()).ignore(BotaniaStateProps.COLOR).build());
@@ -762,14 +747,37 @@ public final class ModelHandler {
             ModelLoader.setCustomStateMapper(b, (new StateMap.Builder()).ignore(BlockModSlab.DUMMY).build());
         }
 
-        List<Block> otherSlabs = ImmutableList.copyOf(new Block[] {
-                ModFluffBlocks.livingwoodSlab, ModFluffBlocks.livingwoodPlankSlab, ModFluffBlocks.livingrockSlab, ModFluffBlocks.dreamwoodSlab, ModFluffBlocks.livingrockBrickSlab,
-                ModFluffBlocks.dreamwoodPlankSlab, ModFluffBlocks.prismarineSlab, ModFluffBlocks.prismarineBrickSlab, ModFluffBlocks.darkPrismarineSlab,
-                ModFluffBlocks.reedSlab, ModFluffBlocks.thatchSlab, ModFluffBlocks.netherBrickSlab, ModFluffBlocks.soulBrickSlab, ModFluffBlocks.snowBrickSlab,
-                ModFluffBlocks.tileSlab, ModFluffBlocks.darkQuartzSlab, ModFluffBlocks.manaQuartzSlab, ModFluffBlocks.blazeQuartzSlab,
-                ModFluffBlocks.lavenderQuartzSlab, ModFluffBlocks.redQuartzSlab, ModFluffBlocks.elfQuartzSlab, ModFluffBlocks.sunnyQuartzSlab, ModFluffBlocks.dirtPathSlab,
-                ModFluffBlocks.shimmerrockSlab, ModFluffBlocks.shimmerwoodPlankSlab, ModFluffBlocks.endStoneSlab, ModFluffBlocks.enderBrickSlab
-        });
+        ArrayList<Block> otherSlabs = new ArrayList<>();
+        otherSlabs.add(ModFluffBlocks.livingwoodSlab);
+        otherSlabs.add(ModFluffBlocks.livingwoodPlankSlab);
+        otherSlabs.add(ModFluffBlocks.livingrockSlab);
+        otherSlabs.add(ModFluffBlocks.dreamwoodSlab);
+        otherSlabs.add(ModFluffBlocks.livingrockBrickSlab);
+        otherSlabs.add(ModFluffBlocks.dreamwoodPlankSlab);
+        otherSlabs.add(ModFluffBlocks.prismarineSlab);
+        otherSlabs.add(ModFluffBlocks.prismarineBrickSlab);
+        otherSlabs.add(ModFluffBlocks.darkPrismarineSlab);
+        otherSlabs.add(ModFluffBlocks.reedSlab);
+        otherSlabs.add(ModFluffBlocks.thatchSlab);
+        otherSlabs.add(ModFluffBlocks.netherBrickSlab);
+        otherSlabs.add(ModFluffBlocks.soulBrickSlab);
+        otherSlabs.add(ModFluffBlocks.snowBrickSlab);
+        otherSlabs.add(ModFluffBlocks.tileSlab);
+        otherSlabs.add(ModFluffBlocks.manaQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.blazeQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.lavenderQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.redQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.elfQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.sunnyQuartzSlab);
+        otherSlabs.add(ModFluffBlocks.dirtPathSlab);
+        otherSlabs.add(ModFluffBlocks.shimmerrockSlab);
+        otherSlabs.add(ModFluffBlocks.shimmerwoodPlankSlab);
+        otherSlabs.add(ModFluffBlocks.endStoneSlab);
+        otherSlabs.add(ModFluffBlocks.enderBrickSlab);
+
+        if (ConfigHandler.darkQuartzEnabled) {
+            otherSlabs.add(ModFluffBlocks.darkQuartzSlab);
+        }
 
         for (Block b : otherSlabs) {
             ModelLoader.setCustomStateMapper(b, (new StateMap.Builder()).ignore(BlockModSlab.DUMMY).build());
@@ -788,14 +796,37 @@ public final class ModelHandler {
             ModelLoader.setCustomStateMapper(b, (new StateMap.Builder()).ignore(BlockModSlab.DUMMY, BlockSlab.HALF).build());
         }
         
-        List<Block> otherFullSlabs = ImmutableList.copyOf(new Block[] {
-                ModFluffBlocks.livingwoodSlabFull, ModFluffBlocks.livingwoodPlankSlabFull, ModFluffBlocks.livingrockSlabFull, ModFluffBlocks.dreamwoodSlabFull, ModFluffBlocks.livingrockBrickSlabFull,
-                ModFluffBlocks.dreamwoodPlankSlabFull, ModFluffBlocks.prismarineSlabFull, ModFluffBlocks.prismarineBrickSlabFull, ModFluffBlocks.darkPrismarineSlabFull,
-                ModFluffBlocks.reedSlabFull, ModFluffBlocks.thatchSlabFull, ModFluffBlocks.netherBrickSlabFull, ModFluffBlocks.soulBrickSlabFull, ModFluffBlocks.snowBrickSlabFull,
-                ModFluffBlocks.tileSlabFull, ModFluffBlocks.darkQuartzSlabFull, ModFluffBlocks.manaQuartzSlabFull, ModFluffBlocks.blazeQuartzSlabFull,
-                ModFluffBlocks.lavenderQuartzSlabFull, ModFluffBlocks.redQuartzSlabFull, ModFluffBlocks.elfQuartzSlabFull, ModFluffBlocks.sunnyQuartzSlabFull, ModFluffBlocks.dirtPathSlabFull,
-                ModFluffBlocks.shimmerrockSlabFull, ModFluffBlocks.shimmerwoodPlankSlabFull, ModFluffBlocks.endStoneSlabFull, ModFluffBlocks.enderBrickSlabFull
-        });
+        ArrayList<Block> otherFullSlabs = new ArrayList<>();
+        otherFullSlabs.add(ModFluffBlocks.livingwoodSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.livingwoodPlankSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.livingrockSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.dreamwoodSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.livingrockBrickSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.dreamwoodPlankSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.prismarineSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.prismarineBrickSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.darkPrismarineSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.reedSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.thatchSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.netherBrickSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.soulBrickSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.snowBrickSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.tileSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.manaQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.blazeQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.lavenderQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.redQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.elfQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.sunnyQuartzSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.dirtPathSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.shimmerrockSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.shimmerwoodPlankSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.endStoneSlabFull);
+        otherFullSlabs.add(ModFluffBlocks.enderBrickSlabFull);
+
+        if (ConfigHandler.darkQuartzEnabled) {
+            otherFullSlabs.add(ModFluffBlocks.darkQuartzSlabFull);
+        }
 
         for (Block b : otherFullSlabs) {
             ModelLoader.setCustomStateMapper(b, (new StateMap.Builder()).ignore(BlockModSlab.DUMMY, BlockSlab.HALF).build());
@@ -907,7 +938,6 @@ public final class ModelHandler {
 
         registerItemModel(ModFluffBlocks.blazeQuartzStairs);
         registerItemModel(ModFluffBlocks.darkPrismarineStairs);
-        registerItemModel(ModFluffBlocks.darkQuartzStairs);
         registerItemModel(ModFluffBlocks.dreamwoodStairs);
         registerItemModel(ModFluffBlocks.dreamwoodPlankStairs);
         registerItemModel(ModFluffBlocks.elfQuartzStairs);
@@ -931,6 +961,10 @@ public final class ModelHandler {
         registerItemModel(ModFluffBlocks.sunnyQuartzStairs);
         registerItemModel(ModFluffBlocks.thatchStairs);
         registerItemModel(ModFluffBlocks.tileStairs);
+
+        if (ConfigHandler.darkQuartzEnabled) {
+            registerItemModel(ModFluffBlocks.darkQuartzStairs);
+        }
     }
 
     private static void registerSlabs() {
@@ -952,7 +986,6 @@ public final class ModelHandler {
         registerItemModel(ModFluffBlocks.livingrockBrickSlab);
 
         registerItemModel(ModFluffBlocks.blazeQuartzSlab);
-        registerItemModel(ModFluffBlocks.darkQuartzSlab);
         registerItemModel(ModFluffBlocks.elfQuartzSlab);
         registerItemModel(ModFluffBlocks.lavenderQuartzSlab);
         registerItemModel(ModFluffBlocks.manaQuartzSlab);
@@ -975,6 +1008,10 @@ public final class ModelHandler {
         registerItemModel(ModFluffBlocks.tileSlab);
         registerItemModel(ModFluffBlocks.reedSlab);
         registerItemModel(ModFluffBlocks.thatchSlab);
+
+        if (ConfigHandler.darkQuartzEnabled) {
+            registerItemModel(ModFluffBlocks.darkQuartzSlab);
+        }
 
     }
 
@@ -1017,7 +1054,19 @@ public final class ModelHandler {
     }
 
     private static void registerQuartzBlocks() {
-        for (Block b : ImmutableList.of(ModFluffBlocks.blazeQuartz, ModFluffBlocks.darkQuartz, ModFluffBlocks.elfQuartz, ModFluffBlocks.lavenderQuartz, ModFluffBlocks.manaQuartz, ModFluffBlocks.redQuartz, ModFluffBlocks.sunnyQuartz)) {
+        ArrayList<Block> quartz = new ArrayList<>();
+        quartz.add(ModFluffBlocks.blazeQuartz);
+        quartz.add(ModFluffBlocks.elfQuartz);
+        quartz.add(ModFluffBlocks.lavenderQuartz);
+        quartz.add(ModFluffBlocks.manaQuartz);
+        quartz.add(ModFluffBlocks.redQuartz);
+        quartz.add(ModFluffBlocks.sunnyQuartz);
+
+        if (ConfigHandler.darkQuartzEnabled) {
+            quartz.add(ModFluffBlocks.darkQuartz);
+        }
+
+        for (Block b : quartz) {
             Item item = Item.getItemFromBlock(b);
             String name = GameData.getBlockRegistry().getNameForObject(b).toString();
             ModelLoader.registerItemVariants(item, new ModelResourceLocation(name, "variant=normal"));
