@@ -39,7 +39,7 @@ I made a <a href="http://vazkii.us/br101/">website</a> to teach people how to re
 The best place for suggestions is the <a href="https://www.reddit.com/r/botania">/r/botania</a> subreddit. Before you do, however, please read <a href="http://vazkii.us/uncategorized/stuff-you-wont-see-in-botania/">this blog post</a>, so you don't suggest something that I've denied countless times already.</li><br>
 
 <li id="q12-fake"><b>My console is getting spammed with "true" or "false" in the 1.6 version. How do I fix that?</b> <a href="#q12">(permalink)</a><br>
-I accidentally a debug in, I fixed it in 1.7, if you don't want to update, don't place down Nightshades.<br></li><br>
+I accidentally put a debug in, I fixed it in 1.7, if you don't want to update, don't place down Nightshades.<br></li><br>
 
 <li id="q13-fake"><b>My game has been very laggy since I installed botania, how can I fix it?</b> <a href="#q13">(permalink)</a><br>
 First off, make sure you are on the latest version, there have been lots of optimization patches, if you're still lagging, go check the mod's config. Try turning off the shaders, if that doesn't help, try setting the flower particle frequency to 0. If that doesn't do it either then I really don't know what will.</li><br>
