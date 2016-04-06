@@ -10,6 +10,10 @@
  */
 package vazkii.botania.common.item.material;
 
+import net.minecraftforge.fml.common.registry.GameRegistry;
+import net.minecraftforge.oredict.RecipeSorter;
+import vazkii.botania.common.crafting.recipe.FlowerCrushRecipe;
+import vazkii.botania.common.crafting.recipe.ManaGunClipRecipe;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibItemNames;
 
@@ -19,6 +23,9 @@ public class ItemPestleAndMortar extends ItemMod {
 		super(LibItemNames.PESTLE_AND_MORTAR);
 		setMaxStackSize(1);
 		setContainerItem(this);
+
+		GameRegistry.addRecipe(new FlowerCrushRecipe());
+		RecipeSorter.register("botania:flowerCrush", FlowerCrushRecipe.class, RecipeSorter.Category.SHAPELESS, "");
 	}
 
 }
