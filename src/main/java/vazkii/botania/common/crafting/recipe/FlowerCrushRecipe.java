@@ -23,6 +23,7 @@ import vazkii.botania.common.item.ModItems;
 
 import javax.annotation.Nullable;
 import java.util.List;
+import java.util.regex.Pattern;
 
 public class FlowerCrushRecipe implements IRecipe {
 
@@ -31,7 +32,6 @@ public class FlowerCrushRecipe implements IRecipe {
     @Override
     public boolean matches(InventoryCrafting inventoryCrafting, World world) {
         if (doingFlowerRecipe) return false;
-        doingFlowerRecipe = true;
 
         boolean foundMortar = false;
         boolean foundFlower = false;
@@ -48,7 +48,6 @@ public class FlowerCrushRecipe implements IRecipe {
                 }
             }
         }
-        doingFlowerRecipe = false;
         return foundMortar && foundFlower;
     }
 
@@ -101,8 +100,16 @@ public class FlowerCrushRecipe implements IRecipe {
         }
     }
 
+    private static final Pattern FLOWER_PATTERN = Pattern.compile("(?:(?:flower)|(?:plant))", Pattern.CASE_INSENSITIVE);
+
     private @Nullable ItemStack dyeOutput(ItemStack stack) {
+        if (!FLOWER_PATTERN.matcher(stack.getUnlocalizedName()).find())
+            return null;
+
+        doingFlowerRecipe = true;
         ItemStack result = CraftingManager.getInstance().findMatchingRecipe(withStack(stack.copy()), null);
+        doingFlowerRecipe = false;
+
         if (result.getItem() == ModItems.dye)
             return null;
         for (int i = 0; i < dyes.length; i++) {
