@@ -34,6 +34,9 @@ public class ArmorUpgradeRecipe extends ShapedOreRecipe {
                     ItemNBTHelper.setList(out, "ench", list);
                     return out;
                 }
+                byte runicHardening = ItemNBTHelper.getByte(stack, "RS.HARDEN", (byte)0);
+                if (runicHardening != 0)
+                    ItemNBTHelper.setByte(out, "RS.HARDEN", runicHardening);
             }
         }
         return out;
