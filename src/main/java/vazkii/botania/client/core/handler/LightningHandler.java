@@ -10,15 +10,6 @@
  */
 package vazkii.botania.client.core.handler;
 
-import java.awt.Color;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
-import java.util.HashMap;
-import java.util.Iterator;
-import java.util.Random;
-import java.util.concurrent.ConcurrentLinkedQueue;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.ActiveRenderInfo;
@@ -29,20 +20,27 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.profiler.Profiler;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.opengl.GL11;
-
 import vazkii.botania.client.core.handler.LightningHandler.LightningBolt.Segment;
 import vazkii.botania.client.fx.ParticleRenderDispatcher;
 import vazkii.botania.client.lib.LibResources;
 import vazkii.botania.common.core.helper.Vector3;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Random;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 public class LightningHandler {
 
@@ -194,7 +192,7 @@ public class LightningHandler {
 		private World world;
 		private Entity source;
 
-		public static ConcurrentLinkedQueue<LightningBolt> boltlist = new ConcurrentLinkedQueue<>();
+		public static final ConcurrentLinkedQueue<LightningBolt> boltlist = new ConcurrentLinkedQueue<>();
 
 		public float speed = 1.5F;
 		public static final int fadetime = 20;
@@ -205,7 +203,7 @@ public class LightningHandler {
 		public int colorOuter;
 		public int colorInner;
 
-		public class BoltPoint {
+		public static class BoltPoint {
 
 			public BoltPoint(Vector3 basepoint, Vector3 offsetvec) {
 				point = basepoint.copy().add(offsetvec);

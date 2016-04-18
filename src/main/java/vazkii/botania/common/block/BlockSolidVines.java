@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.block;
 
-import java.util.Random;
-
-import net.minecraft.block.Block;
 import net.minecraft.block.BlockVine;
 import net.minecraft.block.SoundType;
 import net.minecraft.block.state.IBlockState;
@@ -25,19 +22,16 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import vazkii.botania.api.lexicon.ILexiconable;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibBlockNames;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 import vazkii.botania.common.lib.LibMisc;
 
-public class BlockSolidVines extends BlockVine implements ILexiconable {
+import java.util.Random;
 
-	protected static final AxisAlignedBB LADDER_EAST_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.1875D, 1.0D, 1.0D);
-	protected static final AxisAlignedBB LADDER_WEST_AABB = new AxisAlignedBB(0.8125D, 0.0D, 0.0D, 1.0D, 1.0D, 1.0D);
-	protected static final AxisAlignedBB LADDER_SOUTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 1.0D, 1.0D, 0.1875D);
-	protected static final AxisAlignedBB LADDER_NORTH_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.8125D, 1.0D, 1.0D, 1.0D);
+public class BlockSolidVines extends BlockVine implements ILexiconable {
 
 	public BlockSolidVines() {
 		GameRegistry.register(this, new ResourceLocation(LibMisc.MOD_ID, LibBlockNames.SOLID_VINE));
@@ -49,17 +43,7 @@ public class BlockSolidVines extends BlockVine implements ILexiconable {
 
 	@Override
 	public AxisAlignedBB getCollisionBoundingBox(IBlockState state, World world, BlockPos pos) {
-		AxisAlignedBB bounds = getBoundingBox(state, world, pos);
-		
-		if(state.getValue(EAST)) {
-			return new AxisAlignedBB(pos.add(bounds.maxX, bounds.minY, bounds.minZ), pos.add(bounds.maxX, bounds.maxY, bounds.maxZ));
-		}
-		
-		if(state.getValue(SOUTH)) {
-			return new AxisAlignedBB(pos.add(bounds.minX, bounds.minY, bounds.maxZ), pos.add(bounds.maxX, bounds.maxY, bounds.maxZ));
-		}
-		
-		return new AxisAlignedBB(pos.add(bounds.minX, bounds.minY, bounds.minZ), pos.add(bounds.maxX, bounds.maxY, bounds.maxZ));
+		return getBoundingBox(state, world, pos);
 	}
 
 	@Override

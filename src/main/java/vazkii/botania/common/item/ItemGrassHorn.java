@@ -10,11 +10,6 @@
  */
 package vazkii.botania.common.item;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Random;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockBush;
 import net.minecraft.block.state.IBlockState;
@@ -38,6 +33,11 @@ import vazkii.botania.api.item.IHornHarvestable.EnumHornType;
 import vazkii.botania.api.subtile.ISpecialFlower;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.lib.LibItemNames;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Random;
 
 public class ItemGrassHorn extends ItemMod {
 
@@ -128,8 +128,4 @@ public class ItemGrassHorn extends ItemMod {
 		}
 	}
 
-	@Override
-	public boolean isFull3D() {
-		return true;
-	}
 }

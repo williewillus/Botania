@@ -10,31 +10,29 @@
  */
 package vazkii.botania.common.entity;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Optional;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.EnumDyeColor;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.World;
 import vazkii.botania.api.corporea.ICorporeaSpark;
 import vazkii.botania.api.corporea.InvWithLocation;
-import vazkii.botania.common.core.helper.InventoryHelper2;
+import vazkii.botania.common.core.helper.InventoryHelper;
 import vazkii.botania.common.item.ModItems;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class EntityCorporeaSpark extends Entity implements ICorporeaSpark {
 
@@ -195,7 +193,7 @@ public class EntityCorporeaSpark extends Entity implements ICorporeaSpark {
 		int x = MathHelper.floor_double(posX);
 		int y = MathHelper.floor_double(posY - 1);
 		int z = MathHelper.floor_double(posZ);
-		return InventoryHelper2.getInventoryWithLocation(worldObj, new BlockPos(x, y, z), EnumFacing.UP);
+		return InventoryHelper.getInventoryWithLocation(worldObj, new BlockPos(x, y, z), EnumFacing.UP);
 	}
 
 	@Override

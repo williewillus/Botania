@@ -6,9 +6,8 @@ generator.botania-skyblock.info=Not recommended for botania newcomers
 # Something that is not localized, translators, do NOT change this line.
 botaniamisc.noloc=botaniamisc.noloc
 
-# todo 1.8 remove when merging into master
-botaniamisc.unofficial.nag=WARNING !!!!! This port of Botania is UNOFFICIAL! Do NOT report bugs to Vazkii!!!
-botaniamisc.unofficial.report=Report issues to the porter HERE:
+botaniamisc.unofficial.warnRemove=[Botania] Warning: Some decorative blocks are being removed, please migrate to either the vanilla or Quark versions.
+botaniamisc.unofficial.report=[Botania] This port is unofficial! Report issues to the porter HERE:
 
 botaniamisc.nextPage=Next Page
 botaniamisc.prevPage=Previous Page
@@ -468,7 +467,7 @@ entity.Botania.botania:fallingStar.name=Falling Star
 achievement.botania:flowerPickup=Sky of Beginning
 achievement.botania:flowerPickup.desc=Pick up a Mystical Flower from the world
 achievement.botania:lexiconUse=A Realistical Logical Ideologist
-achievement.botania:lexiconUse.desc=Open a Lexica Botania and have a look through the index
+achievement.botania:lexiconUse.desc=Open a Lexica Botania and have a look through the _index
 achievement.botania:daybloomPickup=Daybreak Arrival
 achievement.botania:daybloomPickup.desc=Make a Daybloom in a Petal Apothecary
 achievement.botania:manaPoolPickup=Vivid Wave
@@ -2023,6 +2022,7 @@ botania.page.flowers2=These flowers can be plucked for &1Mystical Petals&0, that
 botania.page.flowers3=Plucking Petals off Flowers.
 botania.page.flowers4=Crafting the &1Pestle and Mortar&0.
 botania.page.flowers5=Grinding Petals into Powder.
+botania.page.flowers5.5=Grinding mundane flowers into Powder.
 botania.page.flowers6=Right clicking the &1Floral Powder&0 in any &1Wool&0 or &1Carpet&0 changes its color to the color of the powder.<br>By mixing the &1Floral Powder&0 with some &1Bone Meal&0, it's possible to create a different type of fertilizer. The &1Floral Fertilizer&0 will grow a small amount of &1Mystical Flowers&0 in the nearby vicinity, if you ever run low on them.
 botania.page.flowers7=Making fertilizer (any powder colors work)
 botania.page.flowers8=Using typical flower substances also works
@@ -3891,7 +3891,7 @@ botania.subtitle.potionCreate=Brewery finishes
 botania.subtitle.runeAltarCraft=Runic Altar finishes
 botania.subtitle.runeAltarStart=Runic Altar starts
 botania.subtitle.spreaderFire=Spreader shoots mana
-botania.subtitle.starcaller=todo
+botania.subtitle.starcaller=Stars descend from the sky
 botania.subtitle.terraBlade=todo
 botania.subtitle.terraformRod=todo
 botania.subtitle.terraPickMode=Terrasteel Pick powers up

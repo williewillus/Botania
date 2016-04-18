@@ -8,7 +8,6 @@
  */
 package vazkii.botania.client.integration.jei;
 
-import mezz.jei.api.IItemRegistry;
 import mezz.jei.api.IJeiHelpers;
 import mezz.jei.api.IJeiRuntime;
 import mezz.jei.api.IModPlugin;
@@ -28,14 +27,14 @@ import vazkii.botania.client.integration.jei.puredaisy.PureDaisyRecipeHandler;
 import vazkii.botania.client.integration.jei.runicaltar.RunicAltarRecipeCategory;
 import vazkii.botania.client.integration.jei.runicaltar.RunicAltarRecipeHandler;
 
+import javax.annotation.Nonnull;
+
 @JEIPlugin
 public class JEIBotaniaPlugin implements IModPlugin {
 
-	private IJeiHelpers jeiHelpers;
-
 	@Override
-	public void register(IModRegistry registry) {
-		jeiHelpers = registry.getJeiHelpers();
+	public void register(@Nonnull IModRegistry registry) {
+		IJeiHelpers jeiHelpers = registry.getJeiHelpers();
 
 		registry.addRecipeCategories(
 				new BreweryRecipeCategory(jeiHelpers.getGuiHelper()),
@@ -64,6 +63,6 @@ public class JEIBotaniaPlugin implements IModPlugin {
 	}
 
 	@Override
-	public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {}
+	public void onRuntimeAvailable(@Nonnull IJeiRuntime jeiRuntime) {}
 
 }

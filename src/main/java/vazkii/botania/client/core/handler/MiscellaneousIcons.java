@@ -10,9 +10,9 @@ package vazkii.botania.client.core.handler;
 
 import com.google.common.collect.Maps;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.launchwrapper.Launch;
 import net.minecraftforge.client.event.ModelBakeEvent;
 import net.minecraftforge.client.event.TextureStitchEvent;
@@ -33,12 +33,10 @@ import vazkii.botania.common.item.equipment.bauble.ItemFlightTiara;
 import vazkii.botania.common.item.relic.ItemKingKey;
 
 import javax.imageio.ImageIO;
-import javax.vecmath.Matrix4f;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.nio.IntBuffer;
-import java.util.List;
 import java.util.Map;
 
 public class MiscellaneousIcons {
@@ -50,6 +48,7 @@ public class MiscellaneousIcons {
         lightRelayWorldIcon,
         lightRelayWorldIconRed,
         alchemyCatalystOverlay,
+        conjurationCatalystOverlay,
         enchanterOverlay,
         manaVoidOverlay,
         manaWater,
@@ -105,6 +104,7 @@ public class MiscellaneousIcons {
         lightRelayWorldIcon = IconHelper.forName(evt.getMap(), "lightRelay1", "blocks");
         lightRelayWorldIconRed = IconHelper.forName(evt.getMap(), "lightRelay3", "blocks");
         alchemyCatalystOverlay = IconHelper.forName(evt.getMap(), "alchemyCatalyst3", "blocks");
+        conjurationCatalystOverlay = IconHelper.forName(evt.getMap(), "conjurationCatalyst3", "blocks");
         enchanterOverlay = IconHelper.forName(evt.getMap(), "enchanterOverlay", "blocks");
         manaVoidOverlay = IconHelper.forName(evt.getMap(), "manaVoid1", "blocks");
         manaWater = IconHelper.forName(evt.getMap(), "manaWater", "blocks");

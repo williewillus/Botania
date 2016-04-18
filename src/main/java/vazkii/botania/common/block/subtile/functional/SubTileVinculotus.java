@@ -10,25 +10,25 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
+import net.minecraft.entity.monster.EntityEnderman;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.living.EnderTeleportEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import vazkii.botania.api.lexicon.LexiconEntry;
+import vazkii.botania.api.subtile.RadiusDescriptor;
+import vazkii.botania.api.subtile.SubTileFunctional;
+import vazkii.botania.common.core.helper.MathHelper;
+import vazkii.botania.common.lexicon.LexiconData;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 import java.util.WeakHashMap;
 
-import net.minecraft.entity.monster.EntityEnderman;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.EnderTeleportEvent;
-import vazkii.botania.api.lexicon.LexiconEntry;
-import vazkii.botania.api.subtile.RadiusDescriptor;
-import vazkii.botania.api.subtile.SubTileFunctional;
-import vazkii.botania.common.core.helper.MathHelper;
-import vazkii.botania.common.lexicon.LexiconData;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 public class SubTileVinculotus extends SubTileFunctional {
 
-	public static Set<SubTileVinculotus> existingFlowers = Collections.newSetFromMap(new WeakHashMap<>());
+	public static final Set<SubTileVinculotus> existingFlowers = Collections.newSetFromMap(new WeakHashMap<>());
 	private static boolean registered = false;
 	private static final int RANGE = 64;
 

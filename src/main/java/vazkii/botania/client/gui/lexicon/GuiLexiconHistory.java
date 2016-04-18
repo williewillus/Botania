@@ -10,17 +10,17 @@
  */
 package vazkii.botania.client.gui.lexicon;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.botania.api.lexicon.ILexicon;
 import vazkii.botania.api.lexicon.LexiconEntry;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class GuiLexiconHistory extends GuiLexiconIndex {
 
-	public static List<LexiconEntry> history = new ArrayList<>();
+	public static final List<LexiconEntry> history = new ArrayList<>();
 
 	public GuiLexiconHistory() {
 		super(null);

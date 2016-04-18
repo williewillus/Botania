@@ -10,32 +10,33 @@
  */
 package vazkii.botania.common.core.handler;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.World;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.botania.api.internal.IManaNetwork;
 import vazkii.botania.api.mana.ManaNetworkEvent;
 import vazkii.botania.api.mana.ManaNetworkEvent.Action;
 import vazkii.botania.api.mana.ManaNetworkEvent.ManaBlockType;
 import vazkii.botania.api.mana.TileSignature;
-import vazkii.botania.common.core.helper.MathHelper;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.Comparator;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+import java.util.WeakHashMap;
+import java.util.function.BinaryOperator;
 
 public final class ManaNetworkHandler implements IManaNetwork {
 
 	public static final ManaNetworkHandler instance = new ManaNetworkHandler();
 
-	public WeakHashMap<World, List<TileSignature>> manaPools = new WeakHashMap<>();
-	public WeakHashMap<World, List<TileSignature>> manaCollectors = new WeakHashMap<>();
+	private final WeakHashMap<World, Set<TileSignature>> manaPools = new WeakHashMap<>();
+	private final WeakHashMap<World, Set<TileSignature>> manaCollectors = new WeakHashMap<>();
 
 	@SubscribeEvent
 	public void onNetworkEvent(ManaNetworkEvent event) {
-		Map<World, List<TileSignature>> map = event.type == ManaBlockType.COLLECTOR ? manaCollectors : manaPools;
+		Map<World, Set<TileSignature>> map = event.type == ManaBlockType.COLLECTOR ? manaCollectors : manaPools;
 		if(event.action == Action.ADD)
 			add(map, event.tile);
 		else remove(map, event.tile);
@@ -69,85 +70,48 @@ public final class ManaNetworkHandler implements IManaNetwork {
 		return isIn(tile, manaPools);
 	}
 
-	private synchronized boolean isIn(TileEntity tile, Map<World, List<TileSignature>> map) {
-		List<TileSignature> list = map.get(tile.getWorld());
-		if(list == null)
-			return false;
-
-		for(TileSignature sig : list)
-			if(sig.tile == tile)
-				return true;
-
-		return false;
+	private synchronized boolean isIn(TileEntity tile, Map<World, Set<TileSignature>> map) {
+		Set<TileSignature> set = map.get(tile.getWorld());
+		return set != null && set.contains(new TileSignature(tile, tile.getWorld().isRemote));
 	}
 
-	private synchronized TileEntity getClosest(List<TileSignature> tiles, BlockPos pos, boolean remoteCheck, int limit) {
-		float closest = Float.MAX_VALUE;
-		TileEntity closestTile = null;
-
-		for(TileSignature sig : tiles) {
-			if(sig.remoteWorld != remoteCheck)
-				continue;
-
-			TileEntity tile = sig.tile;
-			if(tile.isInvalid())
-				continue;
-			float distance = MathHelper.pointDistanceSpace(tile.getPos(), pos);
-			if(distance > limit)
-				continue;
-
-			if(distance < closest) {
-				closest = distance;
-				closestTile = tile;
-			}
-		}
-
-		return closestTile;
+	private synchronized TileEntity getClosest(Set<TileSignature> tiles, BlockPos pos, boolean remoteCheck, int limit) {
+		return tiles.stream()
+				.filter(ts -> ts.isRemote() == remoteCheck)
+				.map(TileSignature::getTile)
+				.filter(t -> !t.isInvalid())
+				.filter(t -> t.getPos().distanceSq(pos) <= limit * limit)
+				.reduce(BinaryOperator.minBy(Comparator.comparing(t -> t.getPos().distanceSq(pos), Double::compare)))
+				.orElse(null);
 	}
 
-	private synchronized void remove(Map<World, List<TileSignature>> map, TileEntity tile) {
+	private synchronized void remove(Map<World, Set<TileSignature>> map, TileEntity tile) {
 		World world = tile.getWorld();
 
 		if(!map.containsKey(world))
 			return;
 
-		List<TileSignature> sigs = map.get(world);
-		for(TileSignature sig : sigs)
-			if(sig.tile.equals(tile)) {
-				sigs.remove(sig);
-				break;
-			}
+		map.get(world).remove(new TileSignature(tile, tile.getWorld().isRemote));
 	}
 
-	private synchronized void add(Map<World, List<TileSignature>> map, TileEntity tile) {
+	private synchronized void add(Map<World, Set<TileSignature>> map, TileEntity tile) {
 		World world = tile.getWorld();
-
-		List<TileSignature> tiles;
-		if(!map.containsKey(world))
-			map.put(world, new ArrayList<>());
-
-		tiles = map.get(world);
-
-		if(!tiles.contains(tile))
-			tiles.add(new TileSignature(tile, tile.getWorld().isRemote));
+		map.putIfAbsent(world, new HashSet<>());
+		map.get(world).add(new TileSignature(tile, tile.getWorld().isRemote));
 	}
 
 	@Override
-	public List<TileSignature> getAllCollectorsInWorld(World world) {
+	public Set<TileSignature> getAllCollectorsInWorld(World world) {
 		return getAllInWorld(manaCollectors, world);
 	}
 
 	@Override
-	public List<TileSignature> getAllPoolsInWorld(World world) {
+	public Set<TileSignature> getAllPoolsInWorld(World world) {
 		return getAllInWorld(manaPools, world);
 	}
 
-	private List<TileSignature> getAllInWorld(Map<World, List<TileSignature>> map, World world) {
-		if(!map.containsKey(world))
-			return new ArrayList<>();
-
-		return map.get(world);
+	private Set<TileSignature> getAllInWorld(Map<World, Set<TileSignature>> map, World world) {
+		return map.getOrDefault(world, new HashSet<>());
 	}
-
 
 }

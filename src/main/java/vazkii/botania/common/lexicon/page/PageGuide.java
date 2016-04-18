@@ -10,12 +10,14 @@
  */
 package vazkii.botania.common.lexicon.page;
 
-import java.awt.Desktop;
-import java.net.URI;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.util.text.translation.I18n;
 import vazkii.botania.api.internal.IGuiLexiconEntry;
+
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class PageGuide extends PageText {
 
@@ -43,7 +45,7 @@ public class PageGuide extends PageText {
 				Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=rx0xyejC6fI"));
 				if(Math.random() < 0.01)
 					Desktop.getDesktop().browse(new URI("https://www.youtube.com/watch?v=dQw4w9WgXcQ"));
-			} catch(Exception e) { }
+			} catch(IOException | URISyntaxException ignored) { }
 	}
 
 }

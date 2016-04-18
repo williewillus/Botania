@@ -10,18 +10,16 @@
  */
 package vazkii.botania.common.item;
 
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.ai.attributes.AbstractAttributeMap;
 import net.minecraft.entity.ai.attributes.AttributeModifier;
-import net.minecraft.entity.ai.attributes.IAttribute;
 import net.minecraft.entity.ai.attributes.IAttributeInstance;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.entity.passive.HorseArmorType;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.init.SoundEvents;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -29,12 +27,18 @@ import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumHand;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingHurtEvent;
-import vazkii.botania.common.lib.LibItemNames;
-import vazkii.botania.common.lib.LibObfuscation;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.items.CapabilityItemHandler;
+import net.minecraftforge.items.IItemHandler;
+import vazkii.botania.common.lib.LibItemNames;
+import vazkii.botania.common.lib.LibObfuscation;
+
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
+import java.util.List;
 
 public class ItemVirus extends ItemMod {
 
@@ -49,17 +53,39 @@ public class ItemVirus extends ItemMod {
 	@Override
 	public boolean itemInteractionForEntity(ItemStack par1ItemStack, EntityPlayer par2EntityPlayer, EntityLivingBase par3EntityLivingBase, EnumHand hand) {
 		if(par3EntityLivingBase instanceof EntityHorse) {
+			if(par2EntityPlayer.worldObj.isRemote)
+				return true;
 			EntityHorse horse = (EntityHorse) par3EntityLivingBase;
 			if(horse.getType() != HorseArmorType.ZOMBIE && horse.getType() != HorseArmorType.SKELETON && horse.isTame()) {
+				IItemHandler inv = horse.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null);
+				ItemStack saddle = inv.getStackInSlot(0);
+
+				for (int i = 1; i < inv.getSlots(); i++)
+					if(inv.getStackInSlot(i) != null)
+						horse.entityDropItem(inv.getStackInSlot(i), 0);
+				if (horse.isChested())
+					horse.entityDropItem(new ItemStack(Blocks.chest), 0);
+
 				horse.setType(par1ItemStack.getItemDamage() == 0 ? HorseArmorType.ZOMBIE : HorseArmorType.SKELETON);
+
+				// Reinit the horse chest to the right new size
+				Method m = ReflectionHelper.findMethod(EntityHorse.class, horse, LibObfuscation.INIT_HORSE_CHEST);
+				try {
+					m.invoke(horse);
+				} catch (IllegalAccessException | InvocationTargetException ignored) {}
+
+				// Put the saddle back
+				horse.getCapability(CapabilityItemHandler.ITEM_HANDLER_CAPABILITY, null).insertItem(0, saddle, false);
+
 				AbstractAttributeMap attributes = horse.getAttributeMap();
 				IAttributeInstance movementSpeed = attributes.getAttributeInstance(SharedMonsterAttributes.MOVEMENT_SPEED);
 				IAttributeInstance health = attributes.getAttributeInstance(SharedMonsterAttributes.MAX_HEALTH);
 				health.applyModifier(new AttributeModifier("Ermergerd Virus D:", health.getBaseValue(), 0));
 				movementSpeed.applyModifier(new AttributeModifier("Ermergerd Virus D:", movementSpeed.getBaseValue(), 0));
-				IAttributeInstance jumpHeight = attributes.getAttributeInstance(ReflectionHelper.<IAttribute, EntityHorse>getPrivateValue(EntityHorse.class, null, LibObfuscation.HORSE_JUMP_STRENGTH));
+				IAttributeInstance jumpHeight = attributes.getAttributeInstance(ReflectionHelper.getPrivateValue(EntityHorse.class, null, LibObfuscation.HORSE_JUMP_STRENGTH));
 				jumpHeight.applyModifier(new AttributeModifier("Ermergerd Virus D:", jumpHeight.getBaseValue() * 0.5, 0));
-				par3EntityLivingBase.playSound(SoundEvents.entity_zombie_villager_cure, 1.0F + par3EntityLivingBase.worldObj.rand.nextFloat(), par3EntityLivingBase.worldObj.rand.nextFloat() * 0.7F + 1.3F);
+				horse.playSound(SoundEvents.entity_zombie_villager_cure, 1.0F + par3EntityLivingBase.worldObj.rand.nextFloat(), par3EntityLivingBase.worldObj.rand.nextFloat() * 0.7F + 1.3F);
+				horse.spawnExplosionParticle();
 
 				par1ItemStack.stackSize--;
 				return true;
@@ -89,12 +115,8 @@ public class ItemVirus extends ItemMod {
 	}
 
 	@Override
-	public String getUnlocalizedName(ItemStack par1ItemStack) {
-		return getUnlocalizedNameLazy(par1ItemStack) + par1ItemStack.getItemDamage();
-	}
-
-	String getUnlocalizedNameLazy(ItemStack par1ItemStack) {
-		return super.getUnlocalizedName(par1ItemStack);
+	public String getUnlocalizedName(ItemStack stack) {
+		return super.getUnlocalizedName(stack) + stack.getItemDamage();
 	}
 
 }

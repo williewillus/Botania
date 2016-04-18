@@ -10,12 +10,6 @@
  */
 package vazkii.botania.client.core.handler;
 
-import java.io.InputStreamReader;
-import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Properties;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -26,7 +20,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
 import net.minecraft.item.ItemStack;
-
+import net.minecraftforge.fml.common.FMLLog;
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.item.IBaubleRender.Helper;
 import vazkii.botania.api.subtile.signature.SubTileSignature;
@@ -35,7 +29,13 @@ import vazkii.botania.client.core.helper.ShaderHelper;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.core.version.VersionChecker;
 import vazkii.botania.common.item.block.ItemBlockSpecialFlower;
-import net.minecraftforge.fml.common.FMLLog;
+
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Properties;
 
 public final class ContributorFancinessHandler implements LayerRenderer<EntityPlayer> {
 
@@ -199,11 +199,12 @@ public final class ContributorFancinessHandler implements LayerRenderer<EntityPl
 			try {
 				URL url = new URL("https://raw.githubusercontent.com/Vazkii/Botania/master/contributors.properties");
 				Properties props = new Properties();
-				props.load(new InputStreamReader(url.openStream()));
-				load(props);
-			} catch(Exception e) {
+				try (InputStreamReader reader = new InputStreamReader(url.openStream())) {
+					props.load(reader);
+					load(props);
+				}
+			} catch (IOException e) {
 				FMLLog.info("[Botania] Could not load contributors list. Either you're offline or github is down. Nothing to worry about, carry on~");
-				e.printStackTrace();
 			}
 			VersionChecker.doneChecking = true;
 		}

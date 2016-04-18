@@ -12,13 +12,13 @@ package vazkii.botania.common.core.version;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
-import vazkii.botania.common.core.handler.ConfigHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import vazkii.botania.common.core.handler.ConfigHandler;
 
 public final class AdaptorNotifier {
 
-	boolean triedToWarnPlayer;
+	private boolean triedToWarnPlayer;
 
 	@SubscribeEvent
 	public void onTick(ClientTickEvent event) {

@@ -12,6 +12,9 @@ package vazkii.botania.common.lib;
 
 public final class LibObfuscation {
 
+	// EntityHorse
+	public static final String[] INIT_HORSE_CHEST = { "initHorseChest", "func_110226_cD", "dJ" };
+
 	// RenderManager
 	public static final String[] RENDERPOSX = { "renderPosX", "field_78725_b", "o" };
 	public static final String[] RENDERPOSY = { "renderPosY", "field_78726_c", "p" };
@@ -26,11 +29,7 @@ public final class LibObfuscation {
 
 	// EntityAINearestAttackableTarget
 	public static final String[] TARGET_CLASS = new String[] { "targetClass", "field_75307_b", "a" };
-	public static final String[] TARGET_ENTITY = new String[] { "targetEntity", "field_75309_a", "d" };
 	public static final String[] TARGET_ENTITY_SELECTOR = new String[] { "targetEntitySelector", "field_82643_g", "c" };
-
-	// EntityAIAttackMelee todo 1.9
-	public static final String[] CLASS_TARGET = new String[] { "classTarget", "field_75444_h", "g" };
 
 	// EntityAIAvoidEntity
 	public static final String[] TARGET_ENTITY_CLASS = new String[] { "classToAvoid", "field_181064_i", "i" };
@@ -65,7 +64,7 @@ public final class LibObfuscation {
 	public static final String[] MAX_NEARBY_ENTITIES = new String[] { "maxNearbyEntities", "field_98292_k", "j" };
 	public static final String[] MAX_SPAWN_DELAY = new String[] { "maxSpawnDelay", "field_98293_h", "g" };
 	public static final String[] MIN_SPAWN_DELAY = new String[] { "minSpawnDelay", "field_98283_g", "f" };
-	public static final String[] POTENTIAL_ENTITY_SPAWNS = new String[] { "minecartToSpawn", "field_98285_e", "b" }; // Todo 1.8 new name makes no sense -> "minecartToSpawn" see MCP name github issue
+	public static final String[] POTENTIAL_ENTITY_SPAWNS = new String[] { "minecartToSpawn", "field_98285_e", "b" };
 	public static final String[] SPAWN_DELAY = new String[] { "spawnDelay", "field_98286_b", "a" };
 	public static final String[] PREV_MOB_ROTATION = new String[] { "prevMobRotation", "field_98284_d", "e" };
 	public static final String[] MOB_ROTATION = new String[] { "mobRotation", "field_98287_c", "d" };
@@ -103,8 +102,5 @@ public final class LibObfuscation {
 	// ItemRenderer todo 1.9 dual wielding
 	public static final String[] PREV_EQUIPPED_PROGRESS = { "prevEquippedProgress", "field_78451_d", "f" };
 	public static final String[] EQUIPPED_PROGRESS = { "equippedProgress", "field_78454_c", "e" };
-
-	// SoundEvent
-	public static final String[] REGISTER_SOUND = { "registerSound", "func_187502_a", "a" };
 
 }

@@ -26,10 +26,18 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
-
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.FMLLog;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
+import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import org.apache.logging.log4j.Level;
-
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.boss.IBotaniaBoss;
 import vazkii.botania.api.lexicon.ITwoNamedPage;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconPage;
@@ -51,10 +59,11 @@ import vazkii.botania.common.core.handler.ChestGenHandler;
 import vazkii.botania.common.core.handler.CommonTickHandler;
 import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.handler.InternalMethodHandler;
+import vazkii.botania.common.core.loot.LootHandler;
 import vazkii.botania.common.core.handler.ManaNetworkHandler;
+import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.handler.PixieHandler;
 import vazkii.botania.common.core.handler.SheddingHandler;
-import vazkii.botania.common.core.handler.ModSounds;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.crafting.ModBrewRecipes;
 import vazkii.botania.common.crafting.ModCraftingRecipes;
@@ -62,6 +71,7 @@ import vazkii.botania.common.crafting.ModElvenTradeRecipes;
 import vazkii.botania.common.crafting.ModManaAlchemyRecipes;
 import vazkii.botania.common.crafting.ModManaConjurationRecipes;
 import vazkii.botania.common.crafting.ModManaInfusionRecipes;
+import vazkii.botania.common.crafting.ModMigrationRecipes;
 import vazkii.botania.common.crafting.ModPetalRecipes;
 import vazkii.botania.common.crafting.ModPureDaisyRecipes;
 import vazkii.botania.common.crafting.ModRuneRecipes;
@@ -75,8 +85,6 @@ import vazkii.botania.common.entity.EntityPinkWither;
 import vazkii.botania.common.entity.EntitySignalFlare;
 import vazkii.botania.common.entity.EntitySpark;
 import vazkii.botania.common.entity.ModEntities;
-//import vazkii.botania.common.integration.buildcraft.StatementAPIPlugin; todo 1.8
-//import vazkii.botania.common.block.ModBanners;
 import vazkii.botania.common.integration.buildcraft.StatementAPIPlugin;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lexicon.LexiconData;
@@ -84,15 +92,8 @@ import vazkii.botania.common.lib.LibMisc;
 import vazkii.botania.common.network.GuiHandler;
 import vazkii.botania.common.world.SkyblockWorldEvents;
 import vazkii.botania.common.world.WorldTypeSkyblock;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.FMLLog;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLInterModComms;
-import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
+
+//import vazkii.botania.common.block.ModBanners;
 
 public class CommonProxy {
 
@@ -113,6 +114,7 @@ public class CommonProxy {
 		ModBanners.init();
 
 		ChestGenHandler.init();
+		LootHandler.init();
 
 		if(Botania.gardenOfGlassLoaded)
 			new WorldTypeSkyblock();
@@ -120,6 +122,7 @@ public class CommonProxy {
 
 	public void init(FMLInitializationEvent event) {
 		ModCraftingRecipes.init();
+		ModMigrationRecipes.init();
 		ModPetalRecipes.init();
 		ModPureDaisyRecipes.init();
 		ModRuneRecipes.init();
@@ -320,6 +323,14 @@ public class CommonProxy {
 	}
 
 	public void lightningFX(World world, Vector3 vectorStart, Vector3 vectorEnd, float ticksPerMeter, long seed, int colorOuter, int colorInner) {
+		// NO-OP
+	}
+
+	public void addBoss(IBotaniaBoss boss) {
+		// NO-OP
+	}
+
+	public void removeBoss(IBotaniaBoss boss) {
 		// NO-OP
 	}
 

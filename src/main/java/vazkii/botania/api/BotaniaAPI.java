@@ -86,11 +86,11 @@ public final class BotaniaAPI {
 	public static final List<RecipeBrew> brewRecipes = new ArrayList<>();
 	public static final List<RecipeManaInfusion> miniFlowerRecipes = new ArrayList<>();
 
-	private static final BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.<String, Class<? extends SubTileEntity>> create();
+	private static final BiMap<String, Class<? extends SubTileEntity>> subTiles = HashBiMap.create();
 	private static final Map<Class<? extends SubTileEntity>, SubTileSignature> subTileSignatures = new HashMap<>();
 	public static final Set<String> subtilesForCreativeMenu = new LinkedHashSet<>();
 	public static final Map<String, String> subTileMods = new HashMap<>();
-	public static final BiMap<String, String> miniFlowers = HashBiMap.<String, String> create();
+	public static final BiMap<String, String> miniFlowers = HashBiMap.create();
 
 	public static final Map<String, Integer> oreWeights = new HashMap<>();
 	public static final Map<String, Integer> oreWeightsNether = new HashMap<>();
@@ -108,18 +108,18 @@ public final class BotaniaAPI {
 	public static final ArmorMaterial elementiumArmorMaterial = EnumHelper.addArmorMaterial("B_ELEMENTIUM", "b_elementium", 18, new int[] { 2, 6, 5, 2 }, 18, SoundEvents.item_armor_equip_iron);
 	public static final ToolMaterial elementiumToolMaterial = EnumHelper.addToolMaterial("B_ELEMENTIUM", 3, 720, 6.2F, 2F, 20);
 
-	public static final ArmorMaterial terrasteelArmorMaterial = EnumHelper.addArmorMaterial("TERRASTEEL", "terrasteel", 34, new int[] {3, 8, 6, 3}, 26, SoundEvents.item_armor_equip_iron);
+	public static final ArmorMaterial terrasteelArmorMaterial = EnumHelper.addArmorMaterial("TERRASTEEL", "terrasteel", 34, new int[] {3, 8, 6, 3}, 26, SoundEvents.item_armor_equip_diamond);
 	public static final ToolMaterial terrasteelToolMaterial = EnumHelper.addToolMaterial("TERRASTEEL", 4, 2300, 9F, 3F, 26);
 
-	public static final ArmorMaterial manaweaveArmorMaterial = EnumHelper.addArmorMaterial("MANAWEAVE", "manaweave", 5, new int[] { 1, 2, 2, 1 }, 18, SoundEvents.item_armor_equip_iron);
+	public static final ArmorMaterial manaweaveArmorMaterial = EnumHelper.addArmorMaterial("MANAWEAVE", "manaweave", 5, new int[] { 1, 2, 2, 1 }, 18, SoundEvents.item_armor_equip_leather);
 
 	public static final EnumRarity rarityRelic = EnumHelper.addRarity("RELIC", TextFormatting.GOLD, "Relic");
 
-	public static KnowledgeType basicKnowledge;
-	public static KnowledgeType elvenKnowledge;
+	public static final KnowledgeType basicKnowledge;
+	public static final KnowledgeType elvenKnowledge;
 
 	// This is here for completeness sake, but you shouldn't use it
-	public static KnowledgeType relicKnowledge;
+	public static final KnowledgeType relicKnowledge;
 
 	// All of these categories are initialized during botania's PreInit stage.
 	public static LexiconCategory categoryBasics;
@@ -133,7 +133,7 @@ public final class BotaniaAPI {
 	public static LexiconCategory categoryAlfhomancy;
 	public static LexiconCategory categoryMisc;
 
-	public static Brew fallbackBrew = new Brew("fallback", "botania.brew.fallback", 0, 0);
+	public static final Brew fallbackBrew = new Brew("fallback", "botania.brew.fallback", 0, 0);
 
 	static {
 		registerSubTile("", DummySubTile.class);
@@ -473,7 +473,7 @@ public final class BotaniaAPI {
 	 */
 	public static RecipeManaInfusion registerManaAlchemyRecipe(ItemStack output, Object input, int mana) {
 		RecipeManaInfusion recipe = registerManaInfusionRecipe(output, input, mana);
-		recipe.setAlchemy(true);
+		recipe.setCatalyst(RecipeManaInfusion.alchemyState);
 		return recipe;
 	}
 
@@ -484,7 +484,7 @@ public final class BotaniaAPI {
 	 */
 	public static RecipeManaInfusion registerManaConjurationRecipe(ItemStack output, Object input, int mana) {
 		RecipeManaInfusion recipe = registerManaInfusionRecipe(output, input, mana);
-		recipe.setConjuration(true);
+		recipe.setCatalyst(RecipeManaInfusion.conjurationState);
 		return recipe;
 	}
 
@@ -503,7 +503,7 @@ public final class BotaniaAPI {
 	/**
 	 * Registers a Brew Recipe (for the Botanical Brewery).
 	 * @param brew The brew in to be set in this recipe.
-	 * @inputs The items used in the recipe, no more than 6.
+	 * @param inputs The items used in the recipe, no more than 6.
 	 */
 	public static RecipeBrew registerBrewRecipe(Brew brew, Object... inputs) {
 		Preconditions.checkArgument(inputs.length <= 6);

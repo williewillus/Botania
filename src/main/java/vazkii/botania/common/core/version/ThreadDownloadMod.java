@@ -10,30 +10,30 @@
  */
 package vazkii.botania.common.core.version;
 
-import java.awt.Desktop;
+import net.minecraft.client.Minecraft;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraft.util.text.translation.I18n;
+
+import java.awt.*;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.util.text.translation.I18n;
-
 public class ThreadDownloadMod extends Thread {
 
-	String fileName;
+	private String fileName;
 
-	byte[] buffer = new byte[10240];
+	private byte[] buffer = new byte[10240];
 
-	int totalBytesDownloaded;
-	int bytesJustDownloaded;
+	private int totalBytesDownloaded;
+	private int bytesJustDownloaded;
 
-	InputStream webReader;
+	private InputStream webReader;
 
 	public ThreadDownloadMod(String fileName) {
 		setName("Botania Download File Thread");
@@ -58,7 +58,7 @@ public class ThreadDownloadMod extends Thread {
 
 			try {
 				url.openStream().close(); // Add to DL Counter
-			} catch(IOException e) { }
+			} catch(IOException ignored) {}
 
 			url = new URL(base + "files/" + file);
 			webReader = url.openStream();
@@ -87,15 +87,9 @@ public class ThreadDownloadMod extends Thread {
 			Desktop.getDesktop().open(dir);
 			VersionChecker.downloadedFile = true;
 
-			finalize();
-		} catch(Throwable e) {
+		} catch (IOException e) {
 			e.printStackTrace();
 			sendError();
-			try {
-				finalize();
-			} catch(Throwable e1) {
-				e1.printStackTrace();
-			}
 		}
 	}
 

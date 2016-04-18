@@ -10,23 +10,21 @@
  */
 package vazkii.botania.common.block.tile.corporea;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.item.EntityItemFrame;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraftforge.items.IItemHandler;
 import net.minecraftforge.items.ItemHandlerHelper;
 import vazkii.botania.api.corporea.CorporeaHelper;
 import vazkii.botania.api.corporea.ICorporeaRequestor;
 import vazkii.botania.api.corporea.ICorporeaSpark;
 import vazkii.botania.common.core.helper.InventoryHelper;
-import vazkii.botania.common.core.helper.InventoryHelper2;
-import vazkii.botania.common.lib.LibMisc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TileCorporeaFunnel extends TileCorporeaBase implements ICorporeaRequestor {
 
@@ -99,16 +97,16 @@ public class TileCorporeaFunnel extends TileCorporeaBase implements ICorporeaReq
 
 	private IItemHandler getInv() {
 		TileEntity te = worldObj.getTileEntity(pos.down());
-		IItemHandler ret = InventoryHelper2.getInventory(worldObj, pos.down(), EnumFacing.UP);
+		IItemHandler ret = InventoryHelper.getInventory(worldObj, pos.down(), EnumFacing.UP);
 		if(ret == null)
-			ret = InventoryHelper2.getInventory(worldObj, pos.down(), null);
+			ret = InventoryHelper.getInventory(worldObj, pos.down(), null);
 		if(ret != null && !(te instanceof TileCorporeaFunnel))
 			return ret;
 
 		te = worldObj.getTileEntity(pos.down(2));
-		ret = InventoryHelper2.getInventory(worldObj, pos.down(2), EnumFacing.UP);
+		ret = InventoryHelper.getInventory(worldObj, pos.down(2), EnumFacing.UP);
 		if(ret == null)
-			ret = InventoryHelper2.getInventory(worldObj, pos.down(2), null);
+			ret = InventoryHelper.getInventory(worldObj, pos.down(2), null);
 		if(ret != null && !(te instanceof TileCorporeaFunnel))
 			return ret;
 

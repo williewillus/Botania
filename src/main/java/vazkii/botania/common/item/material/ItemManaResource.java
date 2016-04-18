@@ -10,27 +10,26 @@
  */
 package vazkii.botania.common.item.material;
 
-import java.awt.Color;
-import java.util.List;
-
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.item.EntityItem;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.init.SoundEvents;
-import net.minecraft.inventory.IInventory;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerInteractEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import vazkii.botania.api.item.IPetalApothecary;
 import vazkii.botania.api.recipe.IElvenItem;
 import vazkii.botania.api.recipe.IFlowerComponent;
@@ -42,9 +41,9 @@ import vazkii.botania.common.entity.EntityEnderAirBottle;
 import vazkii.botania.common.item.IColorable;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibItemNames;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import java.awt.*;
+import java.util.List;
 
 public class ItemManaResource extends ItemMod implements IFlowerComponent, IElvenItem, IPickupAchievement, IColorable {
 
@@ -107,8 +106,11 @@ public class ItemManaResource extends ItemMod implements IFlowerComponent, IElve
 
 			par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, SoundEvents.entity_arrow_shoot, SoundCategory.PLAYERS, 0.5F, 0.4F / (itemRand.nextFloat() * 0.4F + 0.8F));
 
-			if(!par3World.isRemote)
-				par3World.spawnEntityInWorld(new EntityEnderAirBottle(par3World, par2EntityPlayer));
+			if(!par3World.isRemote) {
+				EntityEnderAirBottle b = new EntityEnderAirBottle(par3World, par2EntityPlayer);
+				b.setHeadingFromThrower(par2EntityPlayer, par2EntityPlayer.rotationPitch, par2EntityPlayer.rotationYaw, 0F, 1.5F, 1F);
+				par3World.spawnEntityInWorld(b);
+			}
 			else par2EntityPlayer.swingArm(hand);
 			return ActionResult.newResult(EnumActionResult.SUCCESS, par1ItemStack);
 		}

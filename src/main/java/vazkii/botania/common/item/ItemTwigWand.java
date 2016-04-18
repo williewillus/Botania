@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.item;
 
-import java.awt.Color;
-import java.util.List;
-
 import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.creativetab.CreativeTabs;
@@ -26,7 +23,12 @@ import net.minecraft.item.IItemPropertyGetter;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.*;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
+import net.minecraft.util.EnumHand;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.translation.I18n;
@@ -47,6 +49,9 @@ import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.helper.ItemNBTHelper;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.lib.LibItemNames;
+
+import java.awt.*;
+import java.util.List;
 
 public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 
@@ -141,12 +146,12 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 			}
 
 			return wanded ? EnumActionResult.SUCCESS : EnumActionResult.FAIL;
-		} else if(BlockPistonRelay.playerPositions.containsKey(par2EntityPlayer.getName()) && !par3World.isRemote) {
-			BlockPistonRelay.DimWithPos bindPos = BlockPistonRelay.playerPositions.get(par2EntityPlayer.getName());
+		} else if(((BlockPistonRelay) (ModBlocks.pistonRelay)).playerPositions.containsKey(par2EntityPlayer.getUniqueID()) && !par3World.isRemote) {
+			BlockPistonRelay.DimWithPos bindPos = ((BlockPistonRelay) (ModBlocks.pistonRelay)).playerPositions.get(par2EntityPlayer.getUniqueID());
 			BlockPistonRelay.DimWithPos currentPos = new BlockPistonRelay.DimWithPos(par3World.provider.getDimension(), pos);
 
-			BlockPistonRelay.playerPositions.remove(par2EntityPlayer.getName());
-			BlockPistonRelay.mappedPositions.put(bindPos, currentPos);
+			((BlockPistonRelay) (ModBlocks.pistonRelay)).playerPositions.remove(par2EntityPlayer.getUniqueID());
+			((BlockPistonRelay) (ModBlocks.pistonRelay)).mappedPositions.put(bindPos, currentPos);
 			BlockPistonRelay.WorldData.get(par3World).markDirty();
 
 			par3World.playSound(null, par2EntityPlayer.posX, par2EntityPlayer.posY, par2EntityPlayer.posZ, BotaniaSoundEvents.ding, SoundCategory.PLAYERS, 1F, 1F);
@@ -197,11 +202,6 @@ public class ItemTwigWand extends Item16Colors implements ICoordBoundItem {
 		}
 
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
-	}
-
-	@Override
-	public boolean isFull3D() {
-		return true;
 	}
 
 	@Override

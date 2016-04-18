@@ -16,8 +16,11 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraftforge.fml.common.Loader;
+import net.minecraftforge.fml.common.registry.GameRegistry;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.BotaniaAPI;
+import vazkii.botania.api.recipe.RecipeManaInfusion;
 import vazkii.botania.api.state.BotaniaStateProps;
 import vazkii.botania.api.subtile.SubTileEntity;
 import vazkii.botania.client.lib.LibResources;
@@ -175,8 +178,6 @@ import vazkii.botania.common.block.tile.string.TileRedStringRelay;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.lib.LibBlockNames;
 import vazkii.botania.common.lib.LibOreDict;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.registry.GameRegistry;
 
 public final class ModBlocks {
 
@@ -377,11 +378,7 @@ public final class ModBlocks {
 			OreDictionary.registerOre(LibOreDict.DOUBLE_FLOWER[i + 8], new ItemStack(doubleFlower2, 1, i));
 		}
 
-		OreDictionary.registerOre(LibOreDict.PRISMARINE_BLOCK, new ItemStack(prismarine, 1, OreDictionary.WILDCARD_VALUE));
 		OreDictionary.registerOre(LibOreDict.BLAZE_BLOCK, blazeBlock);
-
-		for(int i = 0; i < 16; i++)
-			OreDictionary.registerOre(LibOreDict.STONE_18_VARIANTS[i], new ItemStack(ModFluffBlocks.stone, 1, i));
 
 		// Vanilla OreDict entries
 		OreDictionary.registerOre("dirt", Blocks.dirt);
@@ -408,6 +405,9 @@ public final class ModBlocks {
 
 		BotaniaAPI.registerPaintableBlock(unstableBlock, BotaniaStateProps.COLOR);
 		BotaniaAPI.registerPaintableBlock(manaBeacon, BotaniaStateProps.COLOR);
+
+		RecipeManaInfusion.alchemyState = alchemyCatalyst.getDefaultState();
+		RecipeManaInfusion.conjurationState = conjurationCatalyst.getDefaultState();
 
 		initTileEntities();
 	}

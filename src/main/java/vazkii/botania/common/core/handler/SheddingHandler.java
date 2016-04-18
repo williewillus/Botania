@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.core.handler;
 
-import java.util.ArrayList;
-import java.util.Map.Entry;
-
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityList;
 import net.minecraft.entity.EntityLiving;
@@ -31,14 +28,18 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.event.entity.living.LivingEvent.LivingUpdateEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lexicon.page.PageShedding;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map.Entry;
 
 public final class SheddingHandler {
 
-	public static ArrayList<ShedPattern> patterns = new ArrayList<>();
-	public static ArrayList<ShedPattern> defaultPatterns = new ArrayList<>();
+	private static final List<ShedPattern> patterns = new ArrayList<>();
+	private static final List<ShedPattern> defaultPatterns = new ArrayList<>();
 
 	@SubscribeEvent
 	public void onLivingUpdate(LivingUpdateEvent event) {
@@ -53,7 +54,7 @@ public final class SheddingHandler {
 		}
 	}
 
-	public static ShedPattern getShedPattern(Entity entity) {
+	private static ShedPattern getShedPattern(Entity entity) {
 		for(ShedPattern pattern : patterns)
 			if(pattern.EntityClass.isInstance(entity))
 				return pattern;
@@ -102,7 +103,7 @@ public final class SheddingHandler {
 		}
 	}
 
-	public static void loadFromConfig(Configuration config, String key, ShedPattern defaultPattern) {
+	private static void loadFromConfig(Configuration config, String key, ShedPattern defaultPattern) {
 		String itemName = "";
 		int metadata = 0;
 		int rate = -1;
@@ -126,7 +127,7 @@ public final class SheddingHandler {
 			patterns.add(new ShedPattern(EntityList.stringToClassMapping.get(key), new ItemStack(Item.itemRegistry.getObject(new ResourceLocation(itemName)), 1, metadata), rate, lexiconSize));
 	}
 
-	public static class ShedPattern {
+	private static class ShedPattern {
 
 		private final Class EntityClass;
 		private final ItemStack itemStack;

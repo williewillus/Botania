@@ -15,9 +15,7 @@ import net.minecraft.client.renderer.entity.RenderBiped;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.util.ResourceLocation;
-
 import org.lwjgl.opengl.ARBShaderObjects;
-
 import vazkii.botania.api.internal.ShaderCallback;
 import vazkii.botania.client.core.handler.BossBarHandler;
 import vazkii.botania.client.core.helper.ShaderHelper;
@@ -25,13 +23,13 @@ import vazkii.botania.common.entity.EntityDoppleganger;
 
 public class RenderDoppleganger extends RenderBiped<EntityDoppleganger> {
 
-	public static float DEFAULT_GRAIN_INTENSITY = 0.05F;
-	public static float DEFAULT_DISFIGURATION = 0.025F;
+	public static final float DEFAULT_GRAIN_INTENSITY = 0.05F;
+	public static final float DEFAULT_DISFIGURATION = 0.025F;
 
 	public static float grainIntensity = DEFAULT_GRAIN_INTENSITY;
 	public static float disfiguration = DEFAULT_DISFIGURATION;
 
-	public static ShaderCallback callback = shader -> {
+	public static final ShaderCallback callback = shader -> {
         // Frag Uniforms
         int disfigurationUniform = ARBShaderObjects.glGetUniformLocationARB(shader, "disfiguration");
         ARBShaderObjects.glUniform1fARB(disfigurationUniform, disfiguration);
@@ -41,7 +39,7 @@ public class RenderDoppleganger extends RenderBiped<EntityDoppleganger> {
         ARBShaderObjects.glUniform1fARB(grainIntensityUniform, grainIntensity);
     };
 
-	public static ShaderCallback defaultCallback = shader -> {
+	public static final ShaderCallback defaultCallback = shader -> {
         // Frag Uniforms
         int disfigurationUniform = ARBShaderObjects.glGetUniformLocationARB(shader, "disfiguration");
         ARBShaderObjects.glUniform1fARB(disfigurationUniform, DEFAULT_DISFIGURATION);
@@ -57,8 +55,6 @@ public class RenderDoppleganger extends RenderBiped<EntityDoppleganger> {
 
 	@Override
 	public void doRender(EntityDoppleganger dopple, double par2, double par4, double par6, float par8, float par9) {
-		BossBarHandler.setCurrentBoss(dopple);
-
 		int invulTime = dopple.getInvulTime();
 		if(invulTime > 0) {
 			grainIntensity = invulTime > 20 ? 1F : invulTime * 0.05F;

@@ -11,23 +11,14 @@
 package vazkii.botania.common;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.event.ClickEvent;
-import net.minecraft.util.text.event.HoverEvent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.Style;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.event.ClickEvent;
+import net.minecraft.util.text.event.HoverEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent;
-import vazkii.botania.common.core.handler.IMCHandler;
-import vazkii.botania.common.core.handler.ManaNetworkHandler;
-import vazkii.botania.common.core.proxy.CommonProxy;
-import vazkii.botania.common.integration.coloredlights.ILightHelper;
-import vazkii.botania.common.integration.coloredlights.LightHelperColored;
-import vazkii.botania.common.integration.coloredlights.LightHelperVanilla;
-import vazkii.botania.common.lib.LibMisc;
 import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -41,6 +32,15 @@ import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 import net.minecraftforge.fml.common.event.FMLServerStoppingEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent;
+import vazkii.botania.common.core.handler.IMCHandler;
+import vazkii.botania.common.core.handler.ManaNetworkHandler;
+import vazkii.botania.common.core.proxy.CommonProxy;
+import vazkii.botania.common.integration.coloredlights.ILightHelper;
+import vazkii.botania.common.integration.coloredlights.LightHelperColored;
+import vazkii.botania.common.integration.coloredlights.LightHelperVanilla;
+import vazkii.botania.common.lib.LibMisc;
 
 @Mod(modid = LibMisc.MOD_ID, name = LibMisc.MOD_NAME, version = LibMisc.VERSION, dependencies = LibMisc.DEPENDENCIES, guiFactory = LibMisc.GUI_FACTORY, acceptedMinecraftVersions = LibMisc.MC_VERSIONS)
 public class Botania {
@@ -54,6 +54,7 @@ public class Botania {
 	public static boolean etFuturumLoaded = false;
 	public static boolean rfApiLoaded = false;
 	public static boolean storageDrawersLoaded = false;
+	public static boolean quarkLoaded = false;
 
 	public static ILightHelper lightHelper;
 
@@ -73,6 +74,7 @@ public class Botania {
 		coloredLightsLoaded = Loader.isModLoaded("easycoloredlights");
 		etFuturumLoaded = Loader.isModLoaded("etfuturum");
 		rfApiLoaded = ModAPIManager.INSTANCE.hasAPI("CoFHAPI|energy");
+		quarkLoaded = Loader.isModLoaded("Quark");
 
 		storageDrawersLoaded = Loader.isModLoaded("StorageDrawers");
 		
@@ -86,13 +88,13 @@ public class Botania {
 	public void nagUnofficial(PlayerEvent.PlayerLoggedInEvent evt) {
 		EntityPlayer player = evt.player;
 
-		ITextComponent message = new TextComponentTranslation("botaniamisc.unofficial.nag");
+		ITextComponent message = new TextComponentTranslation("botaniamisc.unofficial.warnRemove");
 		message.setStyle(new Style().setColor(TextFormatting.RED));
 
 		ITextComponent message2 = new TextComponentTranslation("botaniamisc.unofficial.report");
 		message2.setStyle(new Style().setColor(TextFormatting.YELLOW));
 
-		ITextComponent url = new TextComponentString("https://github.com/williewillus/Botania/issues");
+		ITextComponent url = new TextComponentString(" https://github.com/williewillus/Botania/issues");
 		url.getStyle().setClickEvent(new ClickEvent(ClickEvent.Action.OPEN_URL, "https://github.com/williewillus/Botania/issues"));
 		url.getStyle().setHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, new TextComponentString("CLICK")));
 
@@ -131,8 +133,4 @@ public class Botania {
 		IMCHandler.processMessages(event.getMessages());
 	}
 
-	/*@EventHandler
-	public void missingMappings(FMLMissingMappingsEvent event) {
-		AliasHandler.onMissingMappings(event);
-	}*/
 }

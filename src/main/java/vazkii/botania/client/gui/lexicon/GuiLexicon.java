@@ -10,18 +10,6 @@
  */
 package vazkii.botania.client.gui.lexicon;
 
-import java.awt.Desktop;
-import java.io.IOException;
-import java.net.URI;
-import java.util.ArrayDeque;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Queue;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.gui.FontRenderer;
@@ -31,14 +19,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ChatAllowedCharacters;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
 import net.minecraftforge.common.MinecraftForge;
-
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-
 import vazkii.botania.api.BotaniaAPI;
 import vazkii.botania.api.lexicon.BotaniaTutorialStartEvent;
 import vazkii.botania.api.lexicon.LexiconCategory;
@@ -68,12 +54,26 @@ import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lexicon.page.PageText;
 import vazkii.botania.common.lib.LibMisc;
 
+import java.awt.*;
+import java.io.IOException;
+import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.Month;
+import java.util.ArrayDeque;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Queue;
+
 public class GuiLexicon extends GuiScreen {
 
 	public static GuiLexicon currentOpenLexicon = new GuiLexicon();
 	public static ItemStack stackUsed;
 
-	public static HashMap<String, String> notes = new HashMap<>();
+	public static final Map<String, String> notes = new HashMap<>();
 
 	private static final String TAG_TYPE = "type";
 
@@ -82,11 +82,11 @@ public class GuiLexicon extends GuiScreen {
 	public static final int BOOKMARK_START = 1337;
 	public static final int NOTES_BUTTON_ID = 1336; // random button tho
 	public static final int MAX_BOOKMARK_COUNT = 8;
-	public static List<GuiLexicon> bookmarks = new ArrayList<>();
-	public static List<String> bookmarkKeys = new ArrayList<>();
-	boolean bookmarksNeedPopulation = false;
+	public static final List<GuiLexicon> bookmarks = new ArrayList<>();
+	public static final List<String> bookmarkKeys = new ArrayList<>();
+	private boolean bookmarksNeedPopulation = false;
 
-	public static Queue<LexiconEntry> tutorial = new ArrayDeque<>();
+	public static final Queue<LexiconEntry> tutorial = new ArrayDeque<>();
 
 	public static final ResourceLocation texture = new ResourceLocation(LibResources.GUI_LEXICON);
 	public static final ResourceLocation textureToff = new ResourceLocation(LibResources.GUI_TOFF);
@@ -180,7 +180,9 @@ public class GuiLexicon extends GuiScreen {
 				button.visible = false;
 			}
 
-			if(Calendar.getInstance().get(Calendar.MONTH) == Calendar.NOVEMBER && Calendar.getInstance().get(Calendar.DATE) == 22)
+			LocalDateTime now = LocalDateTime.now();
+
+			if(now.getMonth() == Month.NOVEMBER && now.getDayOfMonth() == 22)
 				buttonList.add(new GuiButtonDoot(-99, left + 100, top + 12));
 		}
 

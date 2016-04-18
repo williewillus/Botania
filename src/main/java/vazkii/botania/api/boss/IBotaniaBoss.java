@@ -18,14 +18,10 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 import java.awt.*;
+import java.util.UUID;
 
 /**
- * An extension of IBossDisplayData. This counts as a botania boss and as a normal
- * minecraft boss since it has IBossDisplayData. Instead of using the typical
- * BossStatus.setBossStatus(entity, true) to set the health bar in the render use
- * BotaniaAPI.internalMethodHandler.setBossStatus(entity);<br><br>
- * Alternatively, you can check if botania is loaded and use the vanilla one
- * if that's not the case.
+ * A Botania boss, that is subject to special rendering.
  */
 public interface IBotaniaBoss {
 
@@ -52,13 +48,19 @@ public interface IBotaniaBoss {
 	public Rectangle getBossBarHPTextureRect();
 
 	/**
-	 * A callback for when this boss's boss bar renders, you can do aditional rendering
+	 * A callback for when this boss's boss bar renders, you can do additional rendering
 	 * here if needed.
+	 * @return How tall your auxiliary renders were
 	 */
 	@SideOnly(Side.CLIENT)
-	public void bossBarRenderCallback(ScaledResolution res, int x, int y);
+	public int bossBarRenderCallback(ScaledResolution res, int x, int y);
 
-	public BossInfo getBossInfo();
+	/**
+	 * Get the serverside UUID of the {@link net.minecraft.world.BossInfoServer} instance tracking this boss
+	 * Note that this is NOT the entity's UUID, nor is it the clientside UUID of the BossInfoServer instance!
+	 * You will most likely need to sync this yourself using the datawatcher
+	 * @return The uuid.
+     */
+	public UUID getBossInfoUuid();
 
-	public EntityLivingBase getEntity();
 }

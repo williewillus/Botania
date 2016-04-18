@@ -17,7 +17,6 @@ import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.recipe.RecipePetals;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 import java.util.List;
 
 public class PetalApothecaryRecipeWrapper implements IRecipeWrapper {
@@ -26,7 +25,7 @@ public class PetalApothecaryRecipeWrapper implements IRecipeWrapper {
 	private final ItemStack output;
 
 	public PetalApothecaryRecipeWrapper(RecipePetals recipe) {
-		ImmutableList.Builder builder = ImmutableList.builder();
+		ImmutableList.Builder<Object> builder = ImmutableList.builder();
 		for(Object o : recipe.getInputs()) {
 			if(o instanceof ItemStack) {
 				builder.add(o);

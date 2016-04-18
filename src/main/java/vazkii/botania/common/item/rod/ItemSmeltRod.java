@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.item.rod;
 
-import java.util.Map;
-import java.util.WeakHashMap;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.EntityLivingBase;
@@ -36,13 +33,16 @@ import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.item.equipment.tool.ToolCommons;
 import vazkii.botania.common.lib.LibItemNames;
 
+import java.util.Map;
+import java.util.WeakHashMap;
+
 public class ItemSmeltRod extends ItemMod implements IManaUsingItem {
 
 	private static final int TIME = 10;
 	private static final int COST = 300;
 	private static final int COST_PER_TICK = COST / TIME;
 
-	public static Map<EntityPlayer, SmeltData> playerData = new WeakHashMap<>();
+	public static final Map<EntityPlayer, SmeltData> playerData = new WeakHashMap<>();
 
 	public ItemSmeltRod() {
 		super(LibItemNames.SMELT_ROD);
@@ -126,11 +126,6 @@ public class ItemSmeltRod extends ItemMod implements IManaUsingItem {
 				}
 			}
 		}
-	}
-
-	@Override
-	public boolean isFull3D() {
-		return true;
 	}
 
 	@Override

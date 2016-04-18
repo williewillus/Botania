@@ -10,10 +10,6 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
-import java.util.Collections;
-import java.util.Set;
-import java.util.WeakHashMap;
-
 import net.minecraft.entity.Entity;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
@@ -21,12 +17,16 @@ import vazkii.botania.api.subtile.SubTileFunctional;
 import vazkii.botania.common.core.helper.MathHelper;
 import vazkii.botania.common.lexicon.LexiconData;
 
+import java.util.Collections;
+import java.util.Set;
+import java.util.WeakHashMap;
+
 public class SubTileSolegnolia extends SubTileFunctional {
 
 	private static final double RANGE = 5;
 	private static final double RANGE_MINI = 1;
 
-	public static Set<SubTileSolegnolia> existingFlowers = Collections.newSetFromMap(new WeakHashMap<>());
+	public static final Set<SubTileSolegnolia> existingFlowers = Collections.newSetFromMap(new WeakHashMap<>());
 	private static boolean registered = false;
 
 	@Override

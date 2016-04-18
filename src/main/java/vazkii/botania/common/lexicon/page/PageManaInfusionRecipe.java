@@ -10,11 +10,7 @@
  */
 package vazkii.botania.common.lexicon.page;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
+import net.minecraft.block.Block;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiScreen;
@@ -22,13 +18,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraft.util.text.translation.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import net.minecraftforge.oredict.OreDictionary;
-
 import org.lwjgl.opengl.GL11;
-
 import vazkii.botania.api.internal.IGuiLexiconEntry;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.lexicon.LexiconRecipeMappings;
@@ -36,23 +32,29 @@ import vazkii.botania.api.recipe.RecipeManaInfusion;
 import vazkii.botania.client.core.handler.HUDHandler;
 import vazkii.botania.client.core.helper.RenderHelper;
 import vazkii.botania.client.lib.LibResources;
-import vazkii.botania.client.render.tile.RenderTilePool;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.block.tile.mana.TilePool;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import vazkii.botania.common.core.helper.ItemNBTHelper;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class PageManaInfusionRecipe extends PageRecipe {
 
 	private static final ResourceLocation manaInfusionOverlay = new ResourceLocation(LibResources.GUI_MANA_INFUSION_OVERLAY);
 
-	List<RecipeManaInfusion> recipes;
-	int ticksElapsed = 0;
-	int recipeAt = 0;
+	private List<RecipeManaInfusion> recipes;
+	private int ticksElapsed = 0;
+	private int recipeAt = 0;
+	private final ItemStack renderStack;
 
 	public PageManaInfusionRecipe(String unlocalizedName, List<RecipeManaInfusion> recipes) {
 		super(unlocalizedName);
 		this.recipes = recipes;
+		renderStack = new ItemStack(ModBlocks.pool, 1, 0);
+		ItemNBTHelper.setBoolean(renderStack, "RenderFull", true);
 	}
 
 	public PageManaInfusionRecipe(String unlocalizedName, RecipeManaInfusion recipe) {
@@ -78,15 +80,17 @@ public class PageManaInfusionRecipe extends PageRecipe {
 
 		renderItemAtGridPos(gui, 1, 1, (ItemStack) input, false);
 
-		RenderTilePool.forceMana = true;
-		renderItemAtGridPos(gui, 2, 1, new ItemStack(ModBlocks.pool, 1, recipe.getOutput().getItem() == Item.getItemFromBlock(ModBlocks.pool) ? 2 : 0), false);
+		renderStack.setItemDamage(recipe.getOutput().getItem() == Item.getItemFromBlock(ModBlocks.pool) ? 2 : 0);
+		renderItemAtGridPos(gui, 2, 1, renderStack, false);
 
 		renderItemAtGridPos(gui, 3, 1, recipe.getOutput(), false);
 
-		if(recipe.isAlchemy())
-			renderItemAtGridPos(gui, 1, 2, new ItemStack(ModBlocks.alchemyCatalyst), false);
-		else if(recipe.isConjuration())
-			renderItemAtGridPos(gui, 1, 2, new ItemStack(ModBlocks.conjurationCatalyst), false);
+		if(recipe.getCatalyst() != null) {
+			Block block = recipe.getCatalyst().getBlock();
+			if (Item.getItemFromBlock(block) != null) {
+				renderItemAtGridPos(gui, 1, 2, new ItemStack(block, 1, block.getMetaFromState(recipe.getCatalyst())), false);
+			}
+		}
 
 		GlStateManager.enableBlend();
 		GlStateManager.blendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);

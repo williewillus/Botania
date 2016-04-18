@@ -14,7 +14,6 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntityBanner;
 import net.minecraftforge.common.util.EnumHelper;
-import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.item.ModItems;
 
 public final class ModBanners {
@@ -43,6 +42,6 @@ public final class ModBanners {
 	public static void addPattern(Class<? extends Enum<?>> clazz, String name, String id, ItemStack craftingItem) {
 		name = "botania_" + name;
 		id = "bt_" + id;
-		EnumHelper.addEnum(clazz, name.toUpperCase(), new Class[] { String.class, String.class, ItemStack.class }, new Object[] { name, id, craftingItem });
+		EnumHelper.addEnum(clazz, name.toUpperCase(), new Class[] { String.class, String.class, ItemStack.class }, name, id, craftingItem);
 	}
 }

@@ -10,9 +10,6 @@
  */
 package vazkii.botania.common.block.subtile.functional;
 
-import java.util.ArrayList;
-import java.util.List;
-
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLiving;
@@ -22,12 +19,15 @@ import net.minecraft.entity.ai.EntityAINearestAttackableTarget;
 import net.minecraft.entity.ai.EntityAITasks.EntityAITaskEntry;
 import net.minecraft.entity.monster.IMob;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraftforge.fml.relauncher.ReflectionHelper;
 import vazkii.botania.api.lexicon.LexiconEntry;
 import vazkii.botania.api.subtile.RadiusDescriptor;
 import vazkii.botania.api.subtile.SubTileFunctional;
 import vazkii.botania.common.lexicon.LexiconData;
 import vazkii.botania.common.lib.LibObfuscation;
-import net.minecraftforge.fml.relauncher.ReflectionHelper;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class SubTileHeiseiDream extends SubTileFunctional {
 
@@ -71,7 +71,6 @@ public class SubTileHeiseiDream extends SubTileFunctional {
 						messWithGetTargetAI((EntityAINearestAttackableTarget) entry.action, (EntityLiving) newTarget);
 						did = true;
 					} else if(entry.action instanceof EntityAIAttackMelee) {
-						messWithAttackOnCollideAI((EntityAIAttackMelee) entry.action);
 						did = true;
 					}
 
@@ -86,11 +85,6 @@ public class SubTileHeiseiDream extends SubTileFunctional {
 	private static void messWithGetTargetAI(EntityAINearestAttackableTarget aiEntry, EntityLivingBase target) {
 		ReflectionHelper.setPrivateValue(EntityAINearestAttackableTarget.class, aiEntry, Entity.class, LibObfuscation.TARGET_CLASS);
 		ReflectionHelper.setPrivateValue(EntityAINearestAttackableTarget.class, aiEntry, Predicates.equalTo(target), LibObfuscation.TARGET_ENTITY_SELECTOR); // todo 1.8 will this leak `target`?
-		ReflectionHelper.setPrivateValue(EntityAINearestAttackableTarget.class, aiEntry, target, LibObfuscation.TARGET_ENTITY);
-	}
-
-	private static void messWithAttackOnCollideAI(EntityAIAttackMelee aiEntry) {
-		ReflectionHelper.setPrivateValue(EntityAIAttackMelee.class, aiEntry, IMob.class, LibObfuscation.CLASS_TARGET);
 	}
 
 	@Override

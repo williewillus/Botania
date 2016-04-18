@@ -10,18 +10,12 @@
  */
 package vazkii.botania.common.entity;
 
-import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.List;
-import java.util.UUID;
-import java.util.regex.Pattern;
-
+import com.google.common.base.Optional;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.multiplayer.WorldClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
@@ -36,6 +30,7 @@ import net.minecraft.entity.monster.EntitySkeleton;
 import net.minecraft.entity.monster.EntityWitch;
 import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.init.MobEffects;
@@ -49,10 +44,11 @@ import net.minecraft.network.datasync.DataParameter;
 import net.minecraft.network.datasync.DataSerializers;
 import net.minecraft.network.datasync.EntityDataManager;
 import net.minecraft.pathfinding.PathNavigateGround;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.tileentity.TileEntityBeacon;
-import net.minecraft.util.*;
+import net.minecraft.util.DamageSource;
+import net.minecraft.util.EnumParticleTypes;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
@@ -63,11 +59,13 @@ import net.minecraft.world.BossInfo;
 import net.minecraft.world.BossInfoServer;
 import net.minecraft.world.EnumDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.WorldServer;
+import net.minecraft.world.storage.loot.LootContext;
+import net.minecraft.world.storage.loot.LootTable;
 import net.minecraftforge.common.util.FakePlayer;
-
-import net.minecraftforge.fml.common.registry.GameData;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import org.lwjgl.opengl.ARBShaderObjects;
-
 import vazkii.botania.api.boss.IBotaniaBossWithShader;
 import vazkii.botania.api.internal.ShaderCallback;
 import vazkii.botania.api.lexicon.multiblock.Multiblock;
@@ -85,8 +83,16 @@ import vazkii.botania.common.core.handler.ConfigHandler;
 import vazkii.botania.common.core.helper.Vector3;
 import vazkii.botania.common.item.ModItems;
 import vazkii.botania.common.item.relic.ItemRelic;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import vazkii.botania.common.lib.LibMisc;
+
+import java.awt.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Random;
+import java.util.UUID;
+import java.util.regex.Pattern;
 
 public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWithShader {
 
@@ -117,6 +123,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	private static final DataParameter<Boolean> AGGRO = EntityDataManager.createKey(EntityDoppleganger.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<Boolean> HARD_MODE = EntityDataManager.createKey(EntityDoppleganger.class, DataSerializers.BOOLEAN);
 	private static final DataParameter<BlockPos> SOURCE = EntityDataManager.createKey(EntityDoppleganger.class, DataSerializers.BLOCK_POS);
+	private static final DataParameter<Optional<UUID>> BOSSINFO_ID = EntityDataManager.createKey(EntityDoppleganger.class, DataSerializers.OPTIONAL_UNIQUE_ID);
 
 	private static final BlockPos[] PYLON_LOCATIONS = {
 		new BlockPos(4, 1, 4),
@@ -133,10 +140,11 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	private boolean anyWithArmor = false;
 
 	private List<UUID> playersWhoAttacked = new ArrayList<>();
+	public EntityPlayer trueKiller = null;
 
 	private static boolean isPlayingMusic = false;
 
-	private final BossInfoServer bossInfo = (BossInfoServer) (new BossInfoServer(this.getDisplayName(), BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS)).setDarkenSky(true);
+	private final BossInfoServer bossInfo = (BossInfoServer) (new BossInfoServer(this.getDisplayName(), BossInfo.Color.PINK, BossInfo.Overlay.PROGRESS)).setCreateFog(true);
 
 	public EntityDoppleganger(World par1World) {
 		super(par1World);
@@ -146,6 +154,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 		tasks.addTask(1, new EntityAIWatchClosest(this, EntityPlayer.class, Float.MAX_VALUE));
 		isImmuneToFire = true;
 		experienceValue = 825;
+		Botania.proxy.addBoss(this);
 	}
 
 	public static MultiblockSet makeMultiblockSet() {
@@ -275,13 +284,14 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 		dataManager.register(DATA_MOB_SPAWN_TICKS, 0);
 		dataManager.register(HARD_MODE, false);
 		dataManager.register(PLAYER_COUNT, 0);
+		dataManager.register(BOSSINFO_ID, Optional.absent());
 	}
 
 	public int getInvulTime() {
 		return dataManager.get(INVUL_TIME);
 	}
 
-	public boolean isAggored() {
+	public boolean isAggroed() {
 		return dataManager.get(AGGRO);
 	}
 
@@ -337,7 +347,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	public void writeEntityToNBT(NBTTagCompound par1nbtTagCompound) {
 		super.writeEntityToNBT(par1nbtTagCompound);
 		par1nbtTagCompound.setInteger(TAG_INVUL_TIME, getInvulTime());
-		par1nbtTagCompound.setBoolean(TAG_AGGRO, isAggored());
+		par1nbtTagCompound.setBoolean(TAG_AGGRO, isAggroed());
 		par1nbtTagCompound.setInteger(TAG_MOB_SPAWN_TICKS, getMobSpawnTicks());
 
 		BlockPos source = getSource();
@@ -376,7 +386,6 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 			if(!playersWhoAttacked.contains(player.getUniqueID()))
 				playersWhoAttacked.add(player.getUniqueID());
 
-			float dmg = par2;
 			boolean crit = false;
 			if(e instanceof EntityPlayer) {
 				EntityPlayer p = (EntityPlayer) e;
@@ -384,7 +393,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 			}
 
 			int cap = crit ? 60 : 40;
-			return super.attackEntityFrom(par1DamageSource, Math.min(cap, dmg) * (isHardMode() ? 0.6F : 1F));
+			return super.attackEntityFrom(par1DamageSource, Math.min(cap, par2) * (isHardMode() ? 0.6F : 1F));
 		}
 		return false;
 	}
@@ -415,7 +424,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 				motionY = 0.5;
 				motionZ = -motionVector.z;
 				setTPDelay(4);
-				spawnPixies = isAggored();
+				spawnPixies = isAggroed();
 			}
 
 			setAggroed(true);
@@ -450,58 +459,44 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	}
 
 	@Override
-	protected void dropFewItems(boolean par1, int par2) {
-		if(par1) {
-			for(int pl = 0; pl < playersWhoAttacked.size(); pl++) {
-				boolean hard = isHardMode();
-				entityDropItem(new ItemStack(ModItems.manaResource, pl == 0 ? hard ? 16 : 8 : hard ? 10 : 6, 5), 1F);
-				boolean droppedRecord = false;
+	public ResourceLocation getLootTable() {
+		return new ResourceLocation(LibMisc.MOD_ID, isHardMode() ? "gaia_guardian_2" : "gaia_guardian");
+	}
 
-				if(hard) {
-					entityDropItem(new ItemStack(ModItems.ancientWill, 1, rand.nextInt(6)), 1F);
-					if(ConfigHandler.relicsEnabled) {
-						ItemStack dice = new ItemStack(ModItems.dice);
-						((ItemRelic) ModItems.dice).bindToUUID(playersWhoAttacked.get(pl), dice);
-						entityDropItem(dice, 1F);
-					}
-
-					if(Math.random() < 0.25)
-						entityDropItem(new ItemStack(ModItems.overgrowthSeed, rand.nextInt(3) + 1), 1F);
-					if(Math.random() < 0.5) {
-						boolean voidLotus = Math.random() < 0.3F;
-						entityDropItem(new ItemStack(ModItems.blackLotus, voidLotus ? 1 : rand.nextInt(3) + 1, voidLotus ? 1 : 0), 1F);
-					}
-					if(Math.random() < 0.9)
-						entityDropItem(new ItemStack(ModItems.manaResource, 16 + rand.nextInt(12)), 1F);
-					if(Math.random() < 0.7)
-						entityDropItem(new ItemStack(ModItems.manaResource, 8 + rand.nextInt(6), 1), 1F);
-					if(Math.random() < 0.5)
-						entityDropItem(new ItemStack(ModItems.manaResource, 4 + rand.nextInt(3), 2), 1F);
-
-					int runes = rand.nextInt(6) + 1;
-					for(int i = 0; i < runes; i++)
-						if(Math.random() < 0.3)
-							entityDropItem(new ItemStack(ModItems.rune, 2 + rand.nextInt(3), rand.nextInt(16)), 1F);
-
-					if(Math.random() < 0.2)
-						entityDropItem(new ItemStack(ModItems.pinkinator), 1F);
-					if(Math.random() < 0.3) {
-						int i = Item.getIdFromItem(Items.record_13);
-						int j = Item.getIdFromItem(Items.record_wait);
-						int k = i + rand.nextInt(j - i + 1);
-						entityDropItem(new ItemStack(Item.getItemById(k)), 1F);
-						droppedRecord = true;
-					}
-				}
-
-				if(!droppedRecord && Math.random() < 0.2)
-					entityDropItem(new ItemStack(hard ? ModItems.recordGaia2 : ModItems.recordGaia1), 1F);
-			}
+	@Override
+	protected void dropLoot(boolean wasRecentlyHit, int lootingModifier, DamageSource source)
+	{
+		// Save true killer, they get extra loot
+		if ("player".equals(source.getDamageType())
+				&& source.getEntity() instanceof EntityPlayer) {
+			this.trueKiller = ((EntityPlayer) source.getEntity());
 		}
+
+		// Drop equipment and clear it so multiple calls to super don't do it again
+		super.dropEquipment(wasRecentlyHit, lootingModifier);
+
+		for (EntityEquipmentSlot e : EntityEquipmentSlot.values()) {
+			this.setItemStackToSlot(e, null);
+		}
+
+		// Generate loot table for every single attacking player
+		for (UUID u : playersWhoAttacked) {
+			EntityPlayer player = worldObj.getPlayerEntityByUUID(u);
+			if (player == null)
+				continue;
+
+			EntityPlayer saveLastAttacker = this.attackingPlayer;
+			attackingPlayer = player;
+			super.dropLoot(wasRecentlyHit, lootingModifier, DamageSource.causePlayerDamage(player));
+			attackingPlayer = saveLastAttacker;
+		}
+
+		trueKiller = null;
 	}
 
 	@Override
 	public void setDead() {
+		Botania.proxy.removeBoss(this);
 		BlockPos source = getSource();
 		Botania.proxy.playRecordClientSided(worldObj, source, null);
 		isPlayingMusic = false;
@@ -517,6 +512,11 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 	@Override
 	public void onLivingUpdate() {
 		super.onLivingUpdate();
+
+		if (!worldObj.isRemote) {
+			dataManager.set(BOSSINFO_ID, Optional.of(bossInfo.getUniqueId()));
+			bossInfo.setPercent(getHealth() / getMaxHealth());
+		}
 
 		if(!getPassengers().isEmpty())
 			this.dismountRidingEntity();
@@ -552,7 +552,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 
 		BlockPos source = getSource();
 		boolean hard = isHardMode();
-		float range = RANGE + 3F;
+		float range;
 		List<EntityPlayer> players = getPlayersAround();
 		int playerCount = getPlayerCount();
 
@@ -651,7 +651,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 			}
 			motionY = 0;
 		} else {
-			if(isAggored()) {
+			if(isAggroed()) {
 				boolean dying = getHealth() / getMaxHealth() < 0.2;
 				if(dying && mobTicks > 0) {
 					motionX = 0;
@@ -763,6 +763,20 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 					damageEntity(DamageSource.causePlayerDamage(players.get(0)), 0);
 			}
 		}
+	}
+
+	@Override
+	public void setBossVisibleTo(EntityPlayerMP player)
+	{
+		super.setBossVisibleTo(player);
+		this.bossInfo.addPlayer(player);
+	}
+
+	@Override
+	public void setBossNonVisibleTo(EntityPlayerMP player)
+	{
+		super.setBossNonVisibleTo(player);
+		this.bossInfo.removePlayer(player);
 	}
 
 	private void spawnMissile() {
@@ -880,7 +894,7 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 
 	@Override
 	@SideOnly(Side.CLIENT)
-	public void bossBarRenderCallback(ScaledResolution res, int x, int y) {
+	public int bossBarRenderCallback(ScaledResolution res, int x, int y) {
 		GlStateManager.pushMatrix();
 		int px = x + 160;
 		int py = y + 12;
@@ -898,16 +912,13 @@ public class EntityDoppleganger extends EntityCreature implements IBotaniaBossWi
 		mc.fontRendererObj.drawStringWithShadow("" + getPlayerCount(), px + 15, py + 4, 0xFFFFFF);
 		mc.fontRendererObj.setUnicodeFlag(unicode);
 		GlStateManager.popMatrix();
+
+		return 5;
 	}
 
 	@Override
-	public BossInfo getBossInfo() {
-		return bossInfo;
-	}
-
-	@Override
-	public EntityLivingBase getEntity() {
-		return this;
+	public UUID getBossInfoUuid() {
+		return dataManager.get(BOSSINFO_ID).or(new UUID(0, 0));
 	}
 
 	@Override

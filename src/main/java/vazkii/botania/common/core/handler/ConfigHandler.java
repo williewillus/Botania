@@ -10,26 +10,24 @@
  */
 package vazkii.botania.common.core.handler;
 
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.text.Style;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.common.config.Configuration;
+import net.minecraftforge.common.config.Property;
+import net.minecraftforge.fml.client.event.ConfigChangedEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import vazkii.botania.common.Botania;
+import vazkii.botania.common.lib.LibMisc;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.text.TextComponentString;
-import net.minecraft.util.text.TextComponentTranslation;
-import net.minecraft.util.text.Style;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
-import vazkii.botania.common.Botania;
-import vazkii.botania.common.lib.LibMisc;
-import net.minecraftforge.fml.client.event.ConfigChangedEvent;
-import net.minecraftforge.fml.common.FMLCommonHandler;
-import net.minecraftforge.fml.common.Loader;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public final class ConfigHandler {
 
@@ -371,8 +369,7 @@ public final class ConfigHandler {
 
 			AdaptableValue<T> adapt = new AdaptableValue<>(version, val);
 			if(!adaptableValues.containsKey(key)) {
-				ArrayList<AdaptableValue> list = new ArrayList<>();
-				adaptableValues.put(key, list);
+				adaptableValues.put(key, new ArrayList<>());
 			}
 
 			List<AdaptableValue> list = adaptableValues.get(key);
@@ -401,27 +398,27 @@ public final class ConfigHandler {
 		}
 
 		public void addMappingInt(int version, String key, int val) {
-			this.<Integer>addMapping(version, key, val);
+			this.addMapping(version, key, val);
 		}
 
 		public void addMappingDouble(int version, String key, double val) {
-			this.<Double>addMapping(version, key, val);
+			this.addMapping(version, key, val);
 		}
 
 		public void addMappingBool(int version, String key, boolean val) {
-			this.<Boolean>addMapping(version, key, val);
+			this.addMapping(version, key, val);
 		}
 
 		public void adaptPropertyInt(Property prop, int val) {
-			this.<Integer>adaptProperty(prop, val);
+			this.adaptProperty(prop, val);
 		}
 
 		public void adaptPropertyDouble(Property prop, double val) {
-			this.<Double>adaptProperty(prop, val);
+			this.adaptProperty(prop, val);
 		}
 
 		public void adaptPropertyBool(Property prop, boolean val) {
-			this.<Boolean>adaptProperty(prop, val);
+			this.adaptProperty(prop, val);
 		}
 
 		public static class AdaptableValue<T> {

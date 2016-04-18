@@ -10,10 +10,6 @@
  */
 package vazkii.botania.common.item.rod;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import com.google.common.collect.ImmutableList;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFlower;
@@ -29,10 +25,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.stats.Achievement;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.EnumActionResult;
+import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumHand;
 import net.minecraft.util.SoundCategory;
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
 import net.minecraftforge.oredict.OreDictionary;
 import vazkii.botania.api.item.IBlockProvider;
@@ -45,7 +41,9 @@ import vazkii.botania.common.achievement.ICraftAchievement;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.item.ItemMod;
 import vazkii.botania.common.lib.LibItemNames;
-import vazkii.botania.common.lib.LibMisc;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockProvider, ICraftAchievement{
 
@@ -103,60 +101,46 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 		return ActionResult.newResult(EnumActionResult.SUCCESS, par1ItemStack);
 	}
 
-	public void terraform(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
+	private void terraform(ItemStack par1ItemStack, World par2World, EntityPlayer par3EntityPlayer) {
 		int range = IManaProficiencyArmor.Helper.hasProficiency(par3EntityPlayer) ? 22 : 16;
 
-		int xCenter = (int) par3EntityPlayer.posX;
-		int yCenter = (int) par3EntityPlayer.posY;
-		int zCenter = (int) par3EntityPlayer.posZ;
+		BlockPos startCenter = new BlockPos(par3EntityPlayer).down();
 
-		if(yCenter < par2World.getSeaLevel()) // Not below sea level
+		if(startCenter.getY() < par2World.getSeaLevel()) // Not below sea level
 			return;
-
-		int yStart = yCenter + range;
 
 		List<CoordsWithBlock> blocks = new ArrayList<>();
 
-		for(int i = -range; i < range + 1; i++)
-			for(int j = -range; j < range + 1; j++) {
-				int k = 0;
-				while(true) {
-					if(yStart + k < 0)
-						break;
+		for(BlockPos pos : BlockPos.getAllInBoxMutable(startCenter.add(-range, -range, -range), startCenter.add(range, range, range))) {
+			IBlockState state = par2World.getBlockState(pos);
+			if(state.getBlock() == Blocks.air)
+				continue;
+			else if(Item.getItemFromBlock(state.getBlock()) == null)
+				continue;
+			int[] ids = OreDictionary.getOreIDs(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
+			for(int id : ids)
+				if(validBlocks.contains(OreDictionary.getOreName(id))) {
+					List<BlockPos> airBlocks = new ArrayList<>();
 
-					BlockPos pos = new BlockPos(xCenter + i, yStart + k, zCenter + j);
-					IBlockState state = par2World.getBlockState(pos);
-
-					if (Item.getItemFromBlock(state.getBlock()) == null)
-						break;
-					int[] ids = OreDictionary.getOreIDs(new ItemStack(state.getBlock(), 1, state.getBlock().getMetaFromState(state)));
-					for(int id : ids)
-						if(validBlocks.contains(OreDictionary.getOreName(id))) {
-							boolean hasAir = false;
-							List<BlockPos> airBlocks = new ArrayList<>();
-
-							for(EnumFacing dir : EnumFacing.HORIZONTALS) {
-								BlockPos pos_ = pos.offset(dir);
-								Block block_ = par2World.getBlockState(pos_).getBlock();
-								if(block_.isAir(par2World.getBlockState(pos_), par2World, pos_) || block_.isReplaceable(par2World, pos_) || block_ instanceof BlockFlower && !(block_ instanceof ISpecialFlower) || block_ == Blocks.double_plant) {
-									airBlocks.add(pos_);
-									hasAir = true;
-								}
-							}
-
-							if(hasAir) {
-								if(pos.getY() > yCenter)
-									blocks.add(new CoordsWithBlock(pos, Blocks.air));
-								else for(BlockPos coords : airBlocks) {
-									if(par2World.getBlockState(coords.down()).getBlock() != Blocks.air)
-										blocks.add(new CoordsWithBlock(coords, Blocks.dirt));
-								}
-							}
-							break;
+					for(EnumFacing dir : EnumFacing.HORIZONTALS) {
+						BlockPos pos_ = pos.offset(dir);
+						Block block_ = par2World.getBlockState(pos_).getBlock();
+						if(block_.isAir(par2World.getBlockState(pos_), par2World, pos_) || block_.isReplaceable(par2World, pos_) || block_ instanceof BlockFlower && !(block_ instanceof ISpecialFlower) || block_ == Blocks.double_plant) {
+							airBlocks.add(pos_);
 						}
-					--k;
+					}
+
+					if(!airBlocks.isEmpty()) {
+						if(pos.getY() > startCenter.getY())
+							blocks.add(new CoordsWithBlock(pos, Blocks.air));
+						else for(BlockPos coords : airBlocks) {
+							if(par2World.getBlockState(coords.down()).getBlock() != Blocks.air)
+								blocks.add(new CoordsWithBlock(coords, Blocks.dirt));
+						}
+					}
+					break;
 				}
-			}
+		}
 
 		int cost = COST_PER * blocks.size();
 
@@ -167,23 +151,18 @@ public class ItemTerraformRod extends ItemMod implements IManaUsingItem, IBlockP
 
 			if(!blocks.isEmpty()) {
 				for(int i = 0; i < 10; i++)
-					par2World.playSound(null, par3EntityPlayer.posX, par3EntityPlayer.posY, par3EntityPlayer.posZ, SoundEvents.block_sand_step, SoundCategory.BLOCKS, 1F, 0.4F);
+					par2World.playSound(par3EntityPlayer, par3EntityPlayer.posX, par3EntityPlayer.posY, par3EntityPlayer.posZ, SoundEvents.block_sand_step, SoundCategory.BLOCKS, 1F, 0.4F);
 				for(int i = 0; i < 120; i++)
-					Botania.proxy.sparkleFX(par2World, xCenter - range + range * 2 * Math.random(), yCenter + 2 + (Math.random() - 0.5) * 2, zCenter - range + range * 2 * Math.random(), 0.35F, 0.2F, 0.05F, 2F, 5);
+					Botania.proxy.sparkleFX(par2World, startCenter.getX() - range + range * 2 * Math.random(), startCenter.getY() + 2 + (Math.random() - 0.5) * 2, startCenter.getZ() - range + range * 2 * Math.random(), 0.35F, 0.2F, 0.05F, 2F, 5);
 			}
 		}
 	}
 
-	@Override
-	public boolean isFull3D() {
-		return true;
-	}
+	private static class CoordsWithBlock extends BlockPos {
 
-	class CoordsWithBlock extends BlockPos {
+		private final Block block;
 
-		final Block block;
-
-		public CoordsWithBlock(BlockPos pos, Block block) {
+		private CoordsWithBlock(BlockPos pos, Block block) {
 			super(pos.getX(), pos.getY(), pos.getZ());
 			this.block = block;
 		}

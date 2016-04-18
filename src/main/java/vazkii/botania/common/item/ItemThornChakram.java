@@ -9,7 +9,6 @@
  * File Created @ [Jan 25, 2015, 6:42:47 PM (GMT)]
  */
 package vazkii.botania.common.item;
-import java.util.List;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.entity.player.EntityPlayer;
@@ -27,6 +26,8 @@ import vazkii.botania.common.achievement.ICraftAchievement;
 import vazkii.botania.common.achievement.ModAchievements;
 import vazkii.botania.common.entity.EntityThornChakram;
 import vazkii.botania.common.lib.LibItemNames;
+
+import java.util.List;
 
 public class ItemThornChakram extends ItemMod implements ICraftAchievement {
 
@@ -57,6 +58,7 @@ public class ItemThornChakram extends ItemMod implements ICraftAchievement {
 			ItemStack copy = stack.copy();
 			stack.stackSize = 1;
 			EntityThornChakram c = new EntityThornChakram(world, player, copy);
+			c.setHeadingFromThrower(player, player.rotationPitch, player.rotationYaw, 0.0F, 1.5F, 1.0F);
 			c.setFire(stack.getItemDamage() != 0);
 			world.spawnEntityInWorld(c);
 		}

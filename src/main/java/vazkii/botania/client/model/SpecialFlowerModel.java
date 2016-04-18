@@ -18,15 +18,14 @@ import com.google.gson.JsonParser;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ItemCameraTransforms;
 import net.minecraft.client.renderer.block.model.ItemOverrideList;
-import net.minecraft.client.renderer.block.model.ModelManager;
+import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.renderer.block.model.IBakedModel;
-import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
@@ -35,11 +34,11 @@ import net.minecraft.world.World;
 import net.minecraftforge.client.model.ICustomModelLoader;
 import net.minecraftforge.client.model.IModel;
 import net.minecraftforge.client.model.IModelCustomData;
+import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.client.model.ModelLoader;
 import net.minecraftforge.client.model.ModelLoaderRegistry;
 import net.minecraftforge.client.model.SimpleModelState;
 import net.minecraftforge.common.model.IModelState;
-import net.minecraftforge.client.model.IPerspectiveAwareModel;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
 import net.minecraftforge.fml.common.FMLLog;
@@ -58,7 +57,7 @@ import java.util.Map;
 public class SpecialFlowerModel implements IModelCustomData {
 
 	// SpecialFlowerModel for when there are no blockModels registered for a subtile
-	public static final SpecialFlowerModel INSTANCE = new SpecialFlowerModel(ImmutableMap.<Optional<String>, ModelResourceLocation>of(), ImmutableMap.<Optional<String>, ModelResourceLocation>of());
+	public static final SpecialFlowerModel INSTANCE = new SpecialFlowerModel(ImmutableMap.of(), ImmutableMap.of());
 
 	private final ImmutableMap<Optional<String>, ModelResourceLocation> blockModels;
 	private final ImmutableMap<Optional<String>, ModelResourceLocation> itemModels;
@@ -105,7 +104,7 @@ public class SpecialFlowerModel implements IModelCustomData {
 
 		for(String key : customData.keySet()) {
 			if("base".equals(key)) {
-				blockBuilder.put(Optional.<String>absent(), getLocation(customData.get(key)));
+				blockBuilder.put(Optional.absent(), getLocation(customData.get(key)));
 			}
 		}
 
@@ -173,7 +172,7 @@ public class SpecialFlowerModel implements IModelCustomData {
 		private void refreshBakedModels() {
 			if(baseModel == null) {
 				// If not done already, bake and cache all models
-				baseModel = getBlockModel(Optional.<String>absent());
+				baseModel = getBlockModel(Optional.absent());
 
 				ImmutableMap.Builder<String, IBakedModel> builder = ImmutableMap.builder();
 				for(Map.Entry<Optional<String>, ModelResourceLocation> e : blockModels.entrySet()) {

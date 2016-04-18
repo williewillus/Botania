@@ -10,10 +10,6 @@
  */
 package vazkii.botania.common.lexicon;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import baubles.common.Config;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -54,6 +50,9 @@ import vazkii.botania.common.lexicon.page.PageTerrasteel;
 import vazkii.botania.common.lexicon.page.PageText;
 import vazkii.botania.common.lib.LibBlockNames;
 import vazkii.botania.common.lib.LibLexicon;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public final class LexiconData {
 
@@ -329,7 +328,9 @@ public final class LexiconData {
 				.setLexiconPages(new PageText("0"), new PageImage("1", LibResources.ENTRY_FLOWERS), new PageText("2"),
 						new PageCraftingRecipe("3", ModCraftingRecipes.recipesPetals),
 						new PageCraftingRecipe("4", ModCraftingRecipes.recipePestleAndMortar),
-						new PageCraftingRecipe("5", ModCraftingRecipes.recipesDyes), new PageText("6"),
+						new PageCraftingRecipe("5", ModCraftingRecipes.recipesDyes),
+						new PageCraftingRecipe("5.5", ModCraftingRecipes.recipesDyesVanilla),
+						new PageText("6"),
 						new PageCraftingRecipe("7", ModCraftingRecipes.recipeFertilizerPowder),
 						new PageCraftingRecipe("8", ModCraftingRecipes.recipeFerilizerDye), new PageText("10"),
 						new PageText("12"), new PageCraftingRecipe("11", ModCraftingRecipes.recipesPetalsDouble),
@@ -1111,15 +1112,6 @@ public final class LexiconData {
 		corporeaInterceptor.setLexiconPages(new PageText("0"), new PageText("1"),
 				new PageCraftingRecipe("2", ModCraftingRecipes.recipeCorporeaInterceptor));
 
-		if (ConfigHandler.enderStuff19Enabled) {
-			endStoneDecor = new BLexiconEntry(LibLexicon.ENDER_END_STONE_DECOR, categoryEnder);
-			endStoneDecor.setLexiconPages(new PageText("0"),
-					new PageCraftingRecipe("1", ModCraftingRecipes.recipeEndStoneBricks),
-					new PageCraftingRecipe("2", ModCraftingRecipes.recipeEndStoneChiseledBricks),
-					new PageCraftingRecipe("3", ModCraftingRecipes.recipeEnderBricks),
-					new PageCraftingRecipe("4", ModCraftingRecipes.recipePillarEnderBricks));
-		}
-
 		spawnerMover = new ALexiconEntry(LibLexicon.ENDER_SPAWNER_MOVER, categoryEnder);
 		spawnerMover.setLexiconPages(new PageText("0"),
 				new PageCraftingRecipe("1", ModCraftingRecipes.recipeSpawnerMover));
@@ -1353,8 +1345,6 @@ public final class LexiconData {
 					new PageCraftingRecipe("14", ModCraftingRecipes.recipesLavenderQuartz),
 					new PageCraftingRecipe("15", ModCraftingRecipes.recipeRedQuartz),
 					new PageCraftingRecipe("23", ModCraftingRecipes.recipeSunnyQuartz), new PageText("16"),
-					new PageCraftingRecipe("17", ModCraftingRecipes.recipeReedBlock),
-					new PageCraftingRecipe("18", ModCraftingRecipes.recipeThatch),
 					new PageCraftingRecipe("19", ModCraftingRecipes.recipeRoofTile),
 					new PageCraftingRecipe("20", ModCraftingRecipes.recipeNetherBrick),
 					new PageCraftingRecipe("21", ModCraftingRecipes.recipeSoulBrick),
@@ -1375,8 +1365,6 @@ public final class LexiconData {
 					new PageCraftingRecipe("14", ModCraftingRecipes.recipesLavenderQuartz),
 					new PageCraftingRecipe("15", ModCraftingRecipes.recipeRedQuartz),
 					new PageCraftingRecipe("23", ModCraftingRecipes.recipeSunnyQuartz), new PageText("16"),
-					new PageCraftingRecipe("17", ModCraftingRecipes.recipeReedBlock),
-					new PageCraftingRecipe("18", ModCraftingRecipes.recipeThatch),
 					new PageCraftingRecipe("19", ModCraftingRecipes.recipeRoofTile),
 					new PageCraftingRecipe("20", ModCraftingRecipes.recipeNetherBrick),
 					new PageCraftingRecipe("21", ModCraftingRecipes.recipeSoulBrick),
@@ -1427,9 +1415,7 @@ public final class LexiconData {
 		if (ConfigHandler.stones18Enabled) {
 			stoneAlchemy = new BLexiconEntry(LibLexicon.MISC_STONE_ALCHEMY, categoryMisc);
 			stoneAlchemy.setLexiconPages(new PageText("0"),
-					new PageManaInfusionRecipe("1", ModManaAlchemyRecipes.stoneRecipes),
-					new PageCraftingRecipe("2", ModCraftingRecipes.recipe18StoneBrick),
-					new PageCraftingRecipe("3", ModCraftingRecipes.recipe18StoneChisel));
+					new PageManaInfusionRecipe("1", ModManaAlchemyRecipes.stoneRecipes));
 		}
 
 		blazeBlock = new BLexiconEntry(LibLexicon.MISC_BLAZE_BLOCK, categoryMisc);
