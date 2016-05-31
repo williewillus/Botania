@@ -10,10 +10,12 @@
  */
 package vazkii.botania.client.render.tile;
 
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
+
 import com.mojang.authlib.GameProfile;
-import com.sun.istack.internal.Nullable;
+
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
 import net.minecraft.client.renderer.tileentity.TileEntitySkullRenderer;
 import net.minecraft.entity.Entity;
@@ -25,13 +27,8 @@ import net.minecraft.entity.monster.EntityZombie;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntitySkull;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.ResourceLocation;
 import vazkii.botania.client.core.helper.ShaderHelper;
-import vazkii.botania.client.model.ModelSkullOverride;
 import vazkii.botania.client.render.entity.RenderDoppleganger;
-import vazkii.botania.common.block.tile.TileGaiaHead;
-
-import javax.annotation.Nonnull;
 
 public class RenderTileGaiaHead extends TileEntitySkullRenderer {
 	@Override
