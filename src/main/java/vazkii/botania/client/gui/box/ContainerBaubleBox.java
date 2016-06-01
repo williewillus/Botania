@@ -99,7 +99,6 @@ public class ContainerBaubleBox extends Container {
 			ItemStack itemstack1 = slot.getStack();
 			itemstack = itemstack1.copy();
 
-			System.out.println(p_82846_2_ + " " + itemstack);
 			if(p_82846_2_ < 28) {
 				if(!mergeItemStack(itemstack1, 28, 64, true))
 					return null;

@@ -38,6 +38,9 @@ public class ItemBaubleBox extends ItemMod {
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if(hand == EnumHand.OFF_HAND) {
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+		}
 		player.openGui(Botania.instance, LibGuiIDs.BAUBLE_BOX, world, 0, 0, 0);
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
