@@ -24,7 +24,7 @@ import java.util.Arrays;
 
 public class InventoryBaubleBox implements IInventory {
 
-	private static final ItemStack[] FALLBACK_INVENTORY = new ItemStack[36];
+	private static final ItemStack[] FALLBACK_INVENTORY = new ItemStack[24];
 
 	final EntityPlayer player;
 	final int slot;
@@ -80,7 +80,7 @@ public class InventoryBaubleBox implements IInventory {
 
 	@Override
 	public int getSizeInventory() {
-		return 36;
+		return 24;
 	}
 
 	@Override

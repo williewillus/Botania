@@ -48,7 +48,7 @@ public class ItemBaubleBox extends ItemMod {
 
 	public static ItemStack[] loadStacks(ItemStack stack) {
 		NBTTagList var2 = ItemNBTHelper.getList(stack, TAG_ITEMS, 10, false);
-		ItemStack[] inventorySlots = new ItemStack[36];
+		ItemStack[] inventorySlots = new ItemStack[24];
 		for(int var3 = 0; var3 < var2.tagCount(); ++var3) {
 			NBTTagCompound var4 = var2.getCompoundTagAt(var3);
 			byte var5 = var4.getByte(TAG_SLOT);
