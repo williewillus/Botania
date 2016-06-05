@@ -38,6 +38,9 @@ public class ItemBaubleBox extends ItemMod {
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if(hand == EnumHand.OFF_HAND) {
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+		}
 		player.openGui(Botania.instance, LibGuiIDs.BAUBLE_BOX, world, 0, 0, 0);
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
@@ -45,7 +48,7 @@ public class ItemBaubleBox extends ItemMod {
 
 	public static ItemStack[] loadStacks(ItemStack stack) {
 		NBTTagList var2 = ItemNBTHelper.getList(stack, TAG_ITEMS, 10, false);
-		ItemStack[] inventorySlots = new ItemStack[36];
+		ItemStack[] inventorySlots = new ItemStack[24];
 		for(int var3 = 0; var3 < var2.tagCount(); ++var3) {
 			NBTTagCompound var4 = var2.getCompoundTagAt(var3);
 			byte var5 = var4.getByte(TAG_SLOT);

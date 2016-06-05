@@ -107,6 +107,9 @@ public class ItemFlowerBag extends ItemMod {
 	@Nonnull
 	@Override
 	public ActionResult<ItemStack> onItemRightClick(@Nonnull ItemStack stack, World world, EntityPlayer player, EnumHand hand) {
+		if(hand == EnumHand.OFF_HAND) {
+			return ActionResult.newResult(EnumActionResult.PASS, stack);
+		}
 		player.openGui(Botania.instance, LibGuiIDs.FLOWER_BAG, world, 0, 0, 0);
 		return ActionResult.newResult(EnumActionResult.SUCCESS, stack);
 	}
