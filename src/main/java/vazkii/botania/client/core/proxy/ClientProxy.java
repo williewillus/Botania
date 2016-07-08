@@ -26,7 +26,7 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
-import net.minecraft.world.WorldSettings.GameType;
+import net.minecraft.world.GameType;
 import net.minecraftforge.client.model.animation.AnimationTESR;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -170,9 +170,10 @@ public class ClientProxy extends CommonProxy {
 	public static boolean dootDoot = false;
 
 	private static final ModelBiped EMPTY_MODEL = new ModelBiped();
-	static {
+	/* This causes a crash before title screen in 1.10.X. From what I could tell, it is no longer necessary
+	 static {
 		EMPTY_MODEL.setInvisible(true);
-	}
+	}*/
 
 	@Override
 	public void preInit(FMLPreInitializationEvent event) {
