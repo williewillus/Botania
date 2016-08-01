@@ -42,6 +42,8 @@ public final class LibOreDict {
 	public static final String PEBBLE = "pebble";
 	public static final String MANAWEAVE_CLOTH = "clothManaweave";
 	public static final String MANA_POWDER = "powderMana";
+	public static final String RECORD_GAIA1 = "record";
+	public static final String RECORD_GAIA2 = "record";
 
 	public static final String VIAL = "bVial";
 	public static final String FLASK = "bFlask";
