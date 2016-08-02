@@ -210,11 +210,14 @@ public class TileAlfPortal extends TileMod {
 		int i = 0;
 		for(ItemStack stack : stacksIn) {
 			if(stack != null && stack.getItem() instanceof ILexicon) {
-				((ILexicon) stack.getItem()).unlockKnowledge(stack, BotaniaAPI.elvenKnowledge);
-				ItemLexicon.setForcedPage(stack, LexiconData.elvenMessage.getUnlocalizedName());
-				spawnItem(stack);
-				stacksIn.remove(i);
-				return;
+				ILexicon lexicon = (ILexicon)stack.getItem();
+				if(!lexicon.isKnowledgeUnlocked(stack, BotaniaAPI.elvenKnowledge)) {
+					lexicon.unlockKnowledge(stack, BotaniaAPI.elvenKnowledge);
+					ItemLexicon.setForcedPage(stack, LexiconData.elvenMessage.getUnlocalizedName());
+					spawnItem(stack);
+					stacksIn.remove(i);
+					return;
+				}
 			}
 			i++;
 		}
