@@ -137,7 +137,17 @@ public class TileAlfPortal extends TileMod {
 							continue;
 
 						ItemStack stack = item.getEntityItem();
-						if((!(stack.getItem() instanceof IElvenItem) || !((IElvenItem) stack.getItem()).isElvenItem(stack)) && !item.getEntityData().hasKey(TAG_PORTAL_FLAG)) {
+						boolean consume;
+						if(item.getEntityData().hasKey(TAG_PORTAL_FLAG)) {
+							consume = false;
+						} else if(stack.getItem() instanceof ItemLexicon) {
+							consume = true;
+						} else if ((!(stack.getItem() instanceof IElvenItem) || !((IElvenItem) stack.getItem()).isElvenItem(stack))) {
+							consume = true;
+						} else {
+							consume = false;
+						}
+						if (consume) {
 							item.setDead();
 							addItem(stack);
 							ticksSinceLastItem = 0;
