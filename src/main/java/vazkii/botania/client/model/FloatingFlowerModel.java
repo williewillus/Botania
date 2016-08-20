@@ -43,6 +43,7 @@ import org.apache.commons.lang3.tuple.Triple;
 import vazkii.botania.api.BotaniaAPIClient;
 import vazkii.botania.api.item.IFloatingFlower;
 import vazkii.botania.api.state.BotaniaStateProps;
+import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.block.ModBlocks;
 import vazkii.botania.common.item.block.ItemBlockFloatingSpecialFlower;
@@ -90,8 +91,13 @@ public class FloatingFlowerModel implements IBakedModel {
 		return builder.build();
 	}
 
-	protected static final LoadingCache<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel> modelCache =
-			CacheBuilder.newBuilder().maximumSize(10).expireAfterWrite(100, TimeUnit.MILLISECONDS).build(new CacheLoader<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel>() {
+	private final LoadingCache<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel> modelCache =
+			CacheBuilder.newBuilder()
+					.concurrencyLevel(1)
+					.maximumSize(100)
+					.expireAfterWrite(10, TimeUnit.SECONDS)
+					.recordStats()
+					.build(new CacheLoader<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel>() {
 				@Override
 				public CompositeBakedModel load(@Nonnull Triple<IBakedModel, IBakedModel, TRSRTransformation> key) {
 					return new CompositeBakedModel(key.getLeft(), key.getMiddle(), key.getRight());
@@ -116,6 +122,8 @@ public class FloatingFlowerModel implements IBakedModel {
 		}
 
 		TRSRTransformation transform = ((TRSRTransformation) realState.getValue(Properties.AnimationProperty));
+		if(transform == null)
+			transform = TRSRTransformation.identity();
 
 		return getModel(islandType, identifier, transform).getQuads(state, face, rand);
 	}
@@ -154,6 +162,9 @@ public class FloatingFlowerModel implements IBakedModel {
 					IDENTITY_CACHE.put(islandType, identifier, model);
 				return model;
 			} else {
+				if (ClientTickHandler.ticksInGame % 20 == 0) {
+					Botania.LOGGER.info("Hit rate: {}", modelCache.stats().hitRate());
+				}
 				return modelCache.getUnchecked(Triple.of(flowerModel, islandModel, animation));
 			}
 		}
