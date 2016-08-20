@@ -14,53 +14,59 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.BlockRendererDispatcher;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.block.model.IBakedModel;
 import net.minecraft.client.renderer.block.model.ModelResourceLocation;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.renderer.tileentity.TileEntitySpecialRenderer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.world.IBlockAccess;
+import net.minecraftforge.client.MinecraftForgeClient;
+import net.minecraftforge.client.model.animation.Animation;
+import net.minecraftforge.client.model.animation.FastTESR;
+import net.minecraftforge.common.animation.Event;
+import net.minecraftforge.common.model.IModelState;
+import net.minecraftforge.common.model.TRSRTransformation;
+import net.minecraftforge.common.model.animation.CapabilityAnimation;
+import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.Properties;
+import org.apache.commons.lang3.tuple.Pair;
 import vazkii.botania.client.core.handler.ClientTickHandler;
 import vazkii.botania.common.core.handler.ConfigHandler;
 
 import javax.annotation.Nonnull;
+import javax.vecmath.Vector3f;
 import java.util.Random;
 
-public class RenderTileFloatingFlower extends TileEntitySpecialRenderer {
+public class RenderTileFloatingFlower extends FastTESR {
 
 	@Override
-	public void renderTileEntityAt(@Nonnull TileEntity tile, double d0, double d1, double d2, float t, int digProgress) {
+	public void renderTileEntityFast(TileEntity te, double x, double y, double z, float partialTicks, int destroyStage, VertexBuffer vb) {
 		if(ConfigHandler.staticFloaters)
 			return;
 
-		if (tile != null)
-			if (!tile.getWorld().isBlockLoaded(tile.getPos(), false))
-				return;
+		BlockRendererDispatcher blockRenderer = Minecraft.getMinecraft().getBlockRendererDispatcher();
+		BlockPos pos = te.getPos();
+		IBlockAccess world = MinecraftForgeClient.getRegionRenderCache(te.getWorld(), pos);
+		IBlockState state = world.getBlockState(pos);
 
+		IExtendedBlockState exState = (IExtendedBlockState) state.getBlock().getExtendedState(state, world, pos);
 
-		BlockRendererDispatcher brd = Minecraft.getMinecraft().getBlockRendererDispatcher();
-		GlStateManager.pushMatrix();
-		GlStateManager.color(1F, 1F, 1F, 1F);
-		GlStateManager.translate(d0, d1, d2);
+		float time = ClientTickHandler.ticksInGame + partialTicks;
+		if(te.getWorld() != null)
+			time += new Random(te.getPos().hashCode()).nextInt(1000);
 
-		double worldTime = (double) (ClientTickHandler.ticksInGame + t);
-		if(tile.getWorld() != null)
-			worldTime += new Random(tile.getPos().hashCode()).nextInt(1000);
+		// TODO: caching?
+		IBakedModel model = blockRenderer.getBlockModelShapes().getModelManager().getModel(new ModelResourceLocation("botania:floatingSpecialFlower", "inventory"));
+		TRSRTransformation rotate1 = new TRSRTransformation(null, TRSRTransformation.quatFromXYZDegrees(new Vector3f(0, -(time * 0.5F), 0)), null, null);
+		TRSRTransformation translate1 = new TRSRTransformation(new Vector3f(0, (float) Math.sin(time * 0.05F) * 0.1F, 0), null, null, null);
+		TRSRTransformation rotate2 = new TRSRTransformation(null, TRSRTransformation.quatFromXYZDegrees(new Vector3f(4F * (float) Math.sin(time * 0.04F), 0, 0)), null, null);
+		TRSRTransformation finalTransform = rotate1.compose(translate1).compose(rotate2);
+		exState = exState.withProperty(Properties.AnimationProperty, finalTransform);
 
-		GlStateManager.translate(0.5F, 0, 0.5F);
-		GlStateManager.rotate(-((float) worldTime * 0.5F), 0F, 1F, 0F);
-		GlStateManager.translate(-0.5, (float) Math.sin(worldTime * 0.05F) * 0.1F, 0.5);
+		vb.setTranslation(x - pos.getX(), y - pos.getY(), z - pos.getZ());
 
-		GlStateManager.rotate(4F * (float) Math.sin(worldTime * 0.04F), 1F, 0F, 0F);
-
-		Minecraft.getMinecraft().renderEngine.bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-		IBlockState state = tile.getWorld().getBlockState(tile.getPos());
-		state = state.getBlock().getExtendedState(state, tile.getWorld(), tile.getPos());
-		IBakedModel model = brd.getBlockModelShapes().getModelManager().getModel(new ModelResourceLocation("botania:floatingSpecialFlower", "inventory"));
-		brd.getBlockModelRenderer().renderModelBrightness(model, state, 1.0F, true);
-
-		GlStateManager.popMatrix();
-
+		blockRenderer.getBlockModelRenderer().renderModel(world, model, exState, pos, vb, false);
 	}
-
 }

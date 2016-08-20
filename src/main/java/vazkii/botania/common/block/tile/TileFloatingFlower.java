@@ -24,6 +24,11 @@ public class TileFloatingFlower extends TileMod implements IFloatingFlower {
 	IslandType type = IslandType.GRASS;
 
 	@Override
+	public boolean hasFastRenderer() {
+		return true;
+	}
+
+	@Override
 	public ItemStack getDisplayStack() {
 		if(forcedStack != null) {
 			ItemStack retStack = forcedStack;

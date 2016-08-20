@@ -8,6 +8,9 @@
  */
 package vazkii.botania.client.model;
 
+import com.google.common.cache.CacheBuilder;
+import com.google.common.cache.CacheLoader;
+import com.google.common.cache.LoadingCache;
 import com.google.common.collect.HashBasedTable;
 import com.google.common.collect.ImmutableList;
 import com.google.common.collect.Table;
@@ -34,7 +37,9 @@ import net.minecraftforge.client.model.pipeline.UnpackedBakedQuad;
 import net.minecraftforge.client.model.pipeline.VertexTransformer;
 import net.minecraftforge.common.model.TRSRTransformation;
 import net.minecraftforge.common.property.IExtendedBlockState;
+import net.minecraftforge.common.property.Properties;
 import org.apache.commons.lang3.tuple.Pair;
+import org.apache.commons.lang3.tuple.Triple;
 import vazkii.botania.api.BotaniaAPIClient;
 import vazkii.botania.api.item.IFloatingFlower;
 import vazkii.botania.api.state.BotaniaStateProps;
@@ -51,12 +56,12 @@ import java.util.ArrayList;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.concurrent.TimeUnit;
 
 public class FloatingFlowerModel implements IBakedModel {
 
 	private static final String MUNDANE_PREFIX = "botania:shimmeringFlower_";
-	private final Table<IFloatingFlower.IslandType, String, CompositeBakedModel> CACHE = HashBasedTable.create();
+	private final Table<IFloatingFlower.IslandType, String, CompositeBakedModel> IDENTITY_CACHE = HashBasedTable.create();
 
 	protected static BakedQuad transform(BakedQuad quad, final TRSRTransformation transform) {
 		UnpackedBakedQuad.Builder builder = new UnpackedBakedQuad.Builder(DefaultVertexFormats.ITEM);
@@ -68,6 +73,7 @@ public class FloatingFlowerModel implements IBakedModel {
 					case POSITION: {
 						float[] newData = new float[4];
 						Vector4f vec = new Vector4f(data);
+						vec.setW(1);
 						transform.getMatrix().transform(vec);
 						vec.get(newData);
 						parent.put(element, newData);
@@ -83,6 +89,14 @@ public class FloatingFlowerModel implements IBakedModel {
 		quad.pipe(consumer);
 		return builder.build();
 	}
+
+	protected static final LoadingCache<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel> modelCache =
+			CacheBuilder.newBuilder().maximumSize(10).expireAfterWrite(100, TimeUnit.MILLISECONDS).build(new CacheLoader<Triple<IBakedModel, IBakedModel, TRSRTransformation>, CompositeBakedModel>() {
+				@Override
+				public CompositeBakedModel load(@Nonnull Triple<IBakedModel, IBakedModel, TRSRTransformation> key) {
+					return new CompositeBakedModel(key.getLeft(), key.getMiddle(), key.getRight());
+				}
+			});
 
 	@Nonnull
 	@Override
@@ -101,15 +115,18 @@ public class FloatingFlowerModel implements IBakedModel {
 			identifier = MUNDANE_PREFIX + state.getValue(BotaniaStateProps.COLOR).getMetadata();
 		}
 
-		return getModel(islandType, identifier).getQuads(state, face, rand);
+		TRSRTransformation transform = ((TRSRTransformation) realState.getValue(Properties.AnimationProperty));
+
+		return getModel(islandType, identifier, transform).getQuads(state, face, rand);
 	}
 
 	// Get the model for this islandtype + flower type combination. If it's not cached already, generate it.
-	private CompositeBakedModel getModel(IFloatingFlower.IslandType islandType, String identifier) {
+	private CompositeBakedModel getModel(IFloatingFlower.IslandType islandType, String identifier, TRSRTransformation animation) {
 		ModelManager modelManager = Minecraft.getMinecraft().getRenderItem().getItemModelMesher().getModelManager();
+		boolean identity = animation.equals(TRSRTransformation.identity());
 
-		if(CACHE.contains(islandType, identifier)) {
-			return CACHE.get(islandType, identifier);
+		if(identity && IDENTITY_CACHE.contains(islandType, identifier)) {
+			return IDENTITY_CACHE.get(islandType, identifier);
 		} else {
 			IBakedModel islandModel;
 			try {
@@ -130,10 +147,15 @@ public class FloatingFlowerModel implements IBakedModel {
 			}
 
 			// Enhance!
-			CompositeBakedModel model = new CompositeBakedModel(flowerModel, islandModel);
-			Botania.LOGGER.debug("Cached floating flower model for islandtype %s and flowertype %s", islandType, identifier);
-			CACHE.put(islandType, identifier, model);
-			return model;
+			if(identity) {
+				CompositeBakedModel model = new CompositeBakedModel(flowerModel, islandModel, animation);
+				Botania.LOGGER.debug("Cached floating flower model for islandtype %s and flowertype %s", islandType, identifier);
+				if(identity)
+					IDENTITY_CACHE.put(islandType, identifier, model);
+				return model;
+			} else {
+				return modelCache.getUnchecked(Triple.of(flowerModel, islandModel, animation));
+			}
 		}
 	}
 
@@ -156,12 +178,12 @@ public class FloatingFlowerModel implements IBakedModel {
 		private final List<BakedQuad> genQuads;
 		private final Map<EnumFacing, List<BakedQuad>> faceQuads = new EnumMap<>(EnumFacing.class);
 
-		public CompositeBakedModel(IBakedModel flower, IBakedModel island) {
+		public CompositeBakedModel(IBakedModel flower, IBakedModel island, TRSRTransformation animationTransform) {
 			this.flower = flower;
 			this.island = island;
 
 			ImmutableList.Builder<BakedQuad> genBuilder = ImmutableList.builder();
-			final TRSRTransformation transform = TRSRTransformation.blockCenterToCorner(new TRSRTransformation(new Vector3f(0F, 0.2F, 0F), null, new Vector3f(0.5F, 0.5F, 0.5F), null));
+			final TRSRTransformation transform = TRSRTransformation.blockCenterToCorner(animationTransform.compose(new TRSRTransformation(new Vector3f(0F, 0.2F, 0F), null, new Vector3f(0.5F, 0.5F, 0.5F), null)));
 
 			for(EnumFacing e : EnumFacing.VALUES)
 				faceQuads.put(e, new ArrayList<>());
@@ -174,9 +196,11 @@ public class FloatingFlowerModel implements IBakedModel {
 			}
 
 			// Add island quads
-			genBuilder.addAll(island.getQuads(null, null, 0));
+			TRSRTransformation fixedAnimation = TRSRTransformation.blockCenterToCorner(animationTransform);
+			island.getQuads(null, null, 0).stream().map(q -> transform(q, fixedAnimation)).forEach(genBuilder::add);
 			for(EnumFacing e : EnumFacing.VALUES) {
-				faceQuads.get(e).addAll(island.getQuads(null, e, 0));
+				List<BakedQuad> faceQ = faceQuads.get(e);
+				island.getQuads(null, e, 0).stream().map(input -> transform(input, fixedAnimation)).forEach(faceQ::add);
 			}
 
 			genQuads = genBuilder.build();
@@ -230,7 +254,7 @@ public class FloatingFlowerModel implements IBakedModel {
 				identifier = MUNDANE_PREFIX + stack.getItemDamage();
 			}
 
-			return FloatingFlowerModel.this.getModel(islandType, identifier);
+			return FloatingFlowerModel.this.getModel(islandType, identifier, TRSRTransformation.identity());
 		}
 	};
 }
