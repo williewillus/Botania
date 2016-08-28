@@ -10,54 +10,39 @@
  */
 package vazkii.botania.client.core.handler;
 
-import com.google.common.collect.ImmutableList;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.TabCompleter;
+import net.minecraftforge.client.event.GuiOpenEvent;
+import net.minecraftforge.client.event.GuiScreenEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
-import org.lwjgl.input.Keyboard;
 import vazkii.botania.api.corporea.CorporeaHelper;
+import vazkii.botania.common.Botania;
 import vazkii.botania.common.lib.LibObfuscation;
 
-import javax.annotation.Nonnull;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
-import java.util.SortedSet;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 
-public class CorporeaAutoCompleteHandler {
+public class CorporeaAutoCompleteHandler extends GuiChat.ChatTabCompleter {
 
-	private boolean isAutoCompleted = false;
-	private String originalString = "";
-	private List<CompletionData> completions = new ArrayList<>();
-	private int position;
+	private static final TreeSet<String> itemNames = new TreeSet<>(String::compareToIgnoreCase);
 
-	static final TreeSet<String> itemNames = new TreeSet<>(String::compareToIgnoreCase);
-
-	private boolean tabLastTick = false;
-
-	public static void updateItemList() {
+	public static void initItemNames() {
 		itemNames.clear();
-		Iterator<Item> iterator = Item.REGISTRY.iterator();
-		ArrayList<ItemStack> curList = new ArrayList<>();
+		List<ItemStack> curList = new ArrayList<>();
 
-		while(iterator.hasNext()) {
-			Item item = iterator.next();
-
+		for (Item item : Item.REGISTRY) {
 			if(item != null && item.getCreativeTab() != null) {
 				curList.clear();
 				try {
 					item.getSubItems(item, null, curList);
-					for(ItemStack stack : curList)
-						itemNames.add(CorporeaHelper.stripControlCodes(stack.getDisplayName().trim()));
+					curList.stream()
+							.map(s -> CorporeaHelper.stripControlCodes(s.getDisplayName().trim()))
+							.forEach(itemNames::add);
 				}
 				catch (Exception e) {}
 			}
@@ -65,81 +50,85 @@ public class CorporeaAutoCompleteHandler {
 	}
 
 	@SubscribeEvent
-	public void onTick(ClientTickEvent event) {
-		if(event.phase != Phase.END)
-			return;
-		GuiScreen screen = Minecraft.getMinecraft().currentScreen;
-		if(!(screen instanceof GuiChat)) {
-			isAutoCompleted = false;
-			return;
+	public static void onGuiOpen(GuiScreenEvent.InitGuiEvent.Post evt) {
+		if (evt.getGui() instanceof GuiChat) {
+			GuiChat gui = ((GuiChat) evt.getGui());
+			TabCompleter completer = ReflectionHelper.getPrivateValue(GuiChat.class, gui, LibObfuscation.TAB_COMPLETER);
+			if (completer instanceof GuiChat.ChatTabCompleter) {
+				Botania.LOGGER.info("Replacing");
+				ReflectionHelper.setPrivateValue(GuiChat.class, gui, new CorporeaAutoCompleteHandler((GuiChat.ChatTabCompleter) completer), LibObfuscation.TAB_COMPLETER);
+			} else {
+				Botania.LOGGER.warn("Couldn't add Corporea Autocomplete to chat GUI");
+			}
 		}
-		GuiChat chat = (GuiChat) screen;
-		if(isAutoCompleted) {
-			boolean valid = ReflectionHelper.getPrivateValue(GuiChat.class, chat, LibObfuscation.COMPLETE_FLAG);
-			if(!valid)
-				isAutoCompleted = false;
-		}
-		if(Keyboard.isKeyDown(15)) {
-			if(tabLastTick)
-				return;
-			tabLastTick = true;
-		} else {
-			tabLastTick = false;
-			return;
-		}
-
-		if(!CorporeaHelper.shouldAutoComplete())
-			return;
-
-		GuiTextField inputField = ReflectionHelper.getPrivateValue(GuiChat.class, chat, LibObfuscation.INPUT_FIELD);
-		if(!isAutoCompleted)
-			buildAutoCompletes(inputField, chat);
-		if(isAutoCompleted && !completions.isEmpty())
-			advanceAutoComplete(inputField, chat);
 	}
 
-	private void advanceAutoComplete(GuiTextField inputField, GuiChat chat) {
-		position++;
-		if(position >= completions.size())
-			position -= completions.size();
-		CompletionData data = completions.get(position);
-		String str = originalString.substring(0, originalString.length() - data.prefixLength) + data.string;
-		inputField.setText(str);
+	private CorporeaAutoCompleteHandler(GuiChat.ChatTabCompleter old) {
+		super(ReflectionHelper.getPrivateValue(TabCompleter.class, old, LibObfuscation.TEXT_FIELD));
 	}
 
-	private void buildAutoCompletes(GuiTextField inputField, GuiChat chat) {
-		String leftOfCursor;
-		if(inputField.getCursorPosition() == 0)
-			leftOfCursor = "";
+	// Copy of super, edits noted
+	@Override
+	public void complete()
+	{
+		// Botania - Fall back if corporea shouldn't act
+		if (!CorporeaHelper.shouldAutoComplete()) {
+			super.complete();
+			return;
+		}
+
+		if (this.didComplete)
+		{
+			this.textField.deleteFromCursor(0);
+			this.textField.deleteFromCursor(this.textField.getNthWordFromPosWS(-1, this.textField.getCursorPosition(), false) - this.textField.getCursorPosition());
+			if (this.completionIdx >= this.completions.size())
+			{
+				this.completionIdx = 0;
+			}
+		}
 		else
-			leftOfCursor = inputField.getText().substring(0, inputField.getCursorPosition());
-		if(leftOfCursor.length() == 0 || leftOfCursor.charAt(0) == '/')
-			return;
-		completions = getNames(leftOfCursor);
-		if(completions.isEmpty())
-			return;
-		position = -1;
-		ReflectionHelper.setPrivateValue(GuiChat.class, chat, true, LibObfuscation.COMPLETE_FLAG);
-		StringBuilder stringbuilder = new StringBuilder();
-		CompletionData data;
-		for(Iterator<CompletionData> iterator = completions.iterator(); iterator.hasNext(); stringbuilder.append(data.string)) {
-			data = iterator.next();
-			if(stringbuilder.length() > 0)
-				stringbuilder.append(", ");
+		{
+			int i = this.textField.getNthWordFromPosWS(-1, this.textField.getCursorPosition(), false);
+			this.completions.clear();
+			this.completionIdx = 0;
+			String s = this.textField.getText().substring(0, this.textField.getCursorPosition());
+			this.requestCorporeaCompletions(s); // Botania - Use our own
+
+			if (this.completions.isEmpty())
+			{
+				return;
+			}
+
+			this.didComplete = true;
+			this.textField.deleteFromCursor(i - this.textField.getCursorPosition());
 		}
 
-		Minecraft.getMinecraft().ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new TextComponentString(stringbuilder.toString()), 1);
-		isAutoCompleted = true;
-		originalString = inputField.getText();
+		this.textField.writeText(net.minecraft.util.text.TextFormatting.getTextWithoutFormattingCodes(this.completions.get(this.completionIdx++)));
 	}
 
-	private List<CompletionData> getNames(String prefix) {
-		String s = prefix.trim();
-		if(s.isEmpty())
-			return ImmutableList.of();
+	// Copy of super.requestCompletions. Edits noted
+	private void requestCorporeaCompletions(String prefix) {
+		if (prefix.length() >= 1)
+		{
+			net.minecraftforge.client.ClientCommandHandler.instance.autoComplete(prefix);
+			this.requestedCompletions = true;           // Botania - move above actual completion because setCompletions needs true
+			setCompletions(buildAutoCompletes(prefix)); // Botania - complete corporea
+		}
+	}
+
+	private String[] buildAutoCompletes(String prefix) {
+		if(prefix.isEmpty() || prefix.charAt(0) == '/')
+			return new String[0];
+		return getNames(prefix);
+	}
+
+	private String[] getNames(String prefix) {
+		prefix = prefix.trim();
+		if(prefix.isEmpty())
+			return new String[0];
 				
-		TreeSet<CompletionData> result = new TreeSet<>();
-		String[] words = s.split(" ");
+		TreeSet<String> result = new TreeSet<>();
+		String[] words = prefix.split(" ");
 		int i = words.length - 1;
 		String curPrefix = words[i];
 		while(i >= 0) {
@@ -148,35 +137,19 @@ public class CorporeaAutoCompleteHandler {
 			if(i >= 0)
 				curPrefix = words[i] + " " + curPrefix;
 		}
-		return new ArrayList<>(result);
+		Botania.LOGGER.info("Final res: " + result);
+		return result.toArray(new String[0]);
 	}
 
-	private List<CompletionData> getNamesStartingWith(String prefix) {
-		ArrayList<CompletionData> result = new ArrayList<>();
-		int length = prefix.length();
-		SortedSet<String> after = itemNames.tailSet(prefix);
-		for(String str : after) {
-			if(str.toLowerCase().startsWith(prefix))
-				result.add(new CompletionData(str, length));
-			else return result;
-		}
+	private List<String> getNamesStartingWith(String prefix) {
+		Botania.LOGGER.info("Getnamesstartingwith: " + prefix);
+
+		List<String> result = itemNames.tailSet(prefix).stream()
+				.filter(s -> s.toLowerCase().startsWith(prefix))
+				.collect(Collectors.toList());
+
+		Botania.LOGGER.info("res: " + result);
 		return result;
-	}
-
-	private static class CompletionData implements Comparable<CompletionData> {
-
-		private final String string;
-		private final int prefixLength;
-
-		public CompletionData(String string, int prefixLength) {
-			this.string = string;
-			this.prefixLength = prefixLength;
-		}
-
-		@Override
-		public int compareTo(@Nonnull CompletionData arg0) {
-			return string.compareTo(arg0.string);
-		}
 	}
 
 }

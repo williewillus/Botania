@@ -28,6 +28,7 @@ import net.minecraftforge.fml.common.ModAPIManager;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLInterModComms;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLServerAboutToStartEvent;
@@ -215,6 +216,11 @@ public class Botania {
 
 		registerDefaultEntityBlacklist();
 		proxy.postInit(event);
+	}
+
+	@EventHandler
+	public void loadComplete(FMLLoadCompleteEvent evt) {
+		proxy.loadComplete(evt);
 	}
 
 	// Overriding the internal method handler will break everything as it changes regularly.

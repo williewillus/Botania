@@ -9,6 +9,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.botania.api.boss.IBotaniaBoss;
@@ -21,6 +22,8 @@ public interface IProxy {
     void init(FMLInitializationEvent event);
 
     void postInit(FMLPostInitializationEvent event);
+
+    void loadComplete(FMLLoadCompleteEvent event);
 
     void setEntryToOpen(LexiconEntry entry);
 

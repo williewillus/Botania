@@ -32,6 +32,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.client.registry.RenderingRegistry;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.relauncher.ReflectionHelper;
@@ -213,6 +214,7 @@ public class ClientProxy implements IProxy {
 		MinecraftForge.EVENT_BUS.register(new RenderLexicon());
 		MinecraftForge.EVENT_BUS.register(BossBarHandler.class);
 		MinecraftForge.EVENT_BUS.register(BergamuteEventHandler.class);
+		MinecraftForge.EVENT_BUS.register(CorporeaAutoCompleteHandler.class);
 		
 		if(ConfigHandler.useAdaptativeConfig)
 			MinecraftForge.EVENT_BUS.register(AdaptorNotifier.class);
@@ -230,8 +232,11 @@ public class ClientProxy implements IProxy {
 	}
 
 	@Override
-	public void postInit(FMLPostInitializationEvent event) {
-		CorporeaAutoCompleteHandler.updateItemList();
+	public void postInit(FMLPostInitializationEvent event) {}
+
+	@Override
+	public void loadComplete(FMLLoadCompleteEvent evt) {
+		CorporeaAutoCompleteHandler.initItemNames();
 	}
 
 	private void initRenderers() {

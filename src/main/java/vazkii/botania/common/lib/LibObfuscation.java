@@ -72,8 +72,10 @@ public final class LibObfuscation {
 	public static final String[] THROWER = { "thrower", "field_70192_c", "h" };
 
 	// GuiChat
-	public static final String[] INPUT_FIELD = { "inputField", "field_146415_a", "a" };
-	public static final String[] COMPLETE_FLAG = { "waitingOnAutocomplete", "field_146414_r", "r" }; // todo 1.9
+	public static final String[] TAB_COMPLETER = { "tabCompleter", "field_184096_i", "i" };
+
+	// TabCompleter
+	public static final String[] TEXT_FIELD = { "textField", "field_186844_a", "a" };
 
 	// Entityliving
 	public static final String[] GET_LIVING_SOUND = { "getAmbientSound", "func_184639_G", "G" };

@@ -21,6 +21,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.world.World;
 import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLLoadCompleteEvent;
 import net.minecraftforge.fml.common.event.FMLPostInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import vazkii.botania.api.boss.IBotaniaBoss;
@@ -38,6 +39,9 @@ public class ServerProxy implements IProxy {
 
 	@Override
 	public void postInit(FMLPostInitializationEvent event) {}
+
+	@Override
+	public void loadComplete(FMLLoadCompleteEvent evt) {}
 
 	@Override
 	public void setEntryToOpen(LexiconEntry entry) {}
