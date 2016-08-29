@@ -77,6 +77,12 @@ public final class LibObfuscation {
 	// TabCompleter
 	public static final String[] TEXT_FIELD = { "textField", "field_186844_a", "a" };
 
+	// GuiTextField
+	public static final String[] TEXT = { "text", "field_146216_j", "k" };
+
+	// Minecraft
+	public static final String[] SCHEDULED_TASKS = { "scheduledTasks", "field_152351_aB", "aO" };
+
 	// Entityliving
 	public static final String[] GET_LIVING_SOUND = { "getAmbientSound", "func_184639_G", "G" };
 	
