@@ -25,6 +25,7 @@ import vazkii.botania.api.corporea.CorporeaHelper;
 import vazkii.botania.common.Botania;
 import vazkii.botania.common.lib.LibObfuscation;
 
+import javax.annotation.Nonnull;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -70,9 +71,57 @@ public class CorporeaAutoCompleteHandler extends GuiChat.ChatTabCompleter {
 	}
 
 	private String lastAutoCompletePrefix = "";
+	private boolean requestedCorporeaCompletions = false;
 
 	private CorporeaAutoCompleteHandler(GuiChat.ChatTabCompleter old) {
 		super(ReflectionHelper.getPrivateValue(TabCompleter.class, old, LibObfuscation.TEXT_FIELD));
+	}
+
+	@Override
+	public void setCompletions(@Nonnull String... newCompl)
+	{
+		// Botania - Fall back if corporea didn't request completions
+		if (!requestedCorporeaCompletions) {
+			super.setCompletions(newCompl);
+			return;
+		}
+
+		// Botania - check our own flag
+		if (this.requestedCorporeaCompletions)
+		{
+			this.didComplete = false;
+			this.completions.clear();
+
+			String[] complete = net.minecraftforge.client.ClientCommandHandler.instance.latestAutoComplete;
+			if (complete != null)
+			{
+				newCompl = com.google.common.collect.ObjectArrays.concat(complete, newCompl, String.class);
+			}
+
+			for (String s : newCompl)
+			{
+				if (!s.isEmpty())
+				{
+					this.completions.add(s);
+				}
+			}
+
+			String s1 = this.textField.getText().substring(this.textField.getNthWordFromPosWS(-1, this.textField.getCursorPosition(), false));
+			String s2 = org.apache.commons.lang3.StringUtils.getCommonPrefix(newCompl);
+			s2 = net.minecraft.util.text.TextFormatting.getTextWithoutFormattingCodes(s2);
+
+			/*if (!s2.isEmpty() && !s1.equalsIgnoreCase(s2))
+			{
+				this.textField.deleteFromCursor(0);
+				this.textField.deleteFromCursor(this.textField.getNthWordFromPosWS(-1, this.textField.getCursorPosition(), false) - this.textField.getCursorPosition());
+				this.textField.writeText(s2);
+			}
+			else */if (!this.completions.isEmpty())
+			{
+				this.didComplete = true;
+				this.complete();
+			}
+		}
 	}
 
 	// Copy of super, edits noted
@@ -125,6 +174,7 @@ public class CorporeaAutoCompleteHandler extends GuiChat.ChatTabCompleter {
 		Botania.LOGGER.info("Final write");
 		showText();
 		this.textField.writeText(net.minecraft.util.text.TextFormatting.getTextWithoutFormattingCodes(this.completions.get(this.completionIdx++)));
+		lastAutoCompletePrefix = completions.get(completionIdx - 1);
 		showText();
 	}
 
@@ -136,7 +186,7 @@ public class CorporeaAutoCompleteHandler extends GuiChat.ChatTabCompleter {
 			String[] completes = buildAutoCompletes(prefix);
 			Botania.LOGGER.info("Built completions: {}", Arrays.toString(completes));
 			runNextClientTick(() -> setCompletions(completes)); // Botania - complete corporea
-			this.requestedCompletions = true;
+			this.requestedCorporeaCompletions = true;					// Botania - use our own flag
 		}
 	}
 
